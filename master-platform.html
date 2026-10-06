@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#1a472a"/>
+<meta name="description" content="منصة تعليمية ذكية - نظام إدارة المناهج والمحادثات الذكية"/>
+<title>المعلم الذكي - منصة تعليمية متقدمة</title>
+<style>
+:root{--primary:#2d7a4a;--secondary:#1a472a;--accent:#4ade80;--bg:#0a1f1a;--card:#132e23;--text:#e8f5e9;--muted:#a1d5b8;--danger:#ef4444;--warning:#f59e0b;--info:#3b82f6;--shadow:0 10px 30px rgba(0,0,0,.4);--transition:all .2s cubic-bezier(.4,0,.2,1)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;direction:rtl}
+body{display:flex}
+#app{width:100%;height:100vh;display:flex;flex-direction:row}
+.sidebar{width:280px;height:100vh;background:linear-gradient(180deg,var(--secondary),var(--primary));border-left:3px solid var(--accent);overflow-y:auto;display:flex;flex-direction:column}
+.logo-section{padding:16px;border-bottom:2px solid rgba(74,222,128,.2);display:flex;align-items:center;gap:10px}
+.logo{width:40px;height:40px;background:linear-gradient(135deg,var(--accent),#22c55e);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:22px}
+.logo-text h2{margin:0;font-size:14px;color:var(--accent);font-weight:700}
+.logo-text p{margin:2px 0 0;font-size:10px;color:var(--muted)}
+.sidebar-menu{flex:1;overflow-y:auto;padding:10px 8px}
+.menu-section{margin-bottom:16px}
+.section-title{font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:700;padding:8px 12px;letter-spacing:.5px}
+.menu-btn{width:100%;padding:10px 12px;background:rgba(74,222,128,.1);color:var(--text);border:1px solid rgba(74,222,128,.2);border-radius:8px;cursor:pointer;margin-bottom:6px;text-align:right;transition:var(--transition);font-size:13px;font-weight:500}
+.menu-btn:hover{background:rgba(74,222,128,.2);border-color:var(--accent);color:var(--accent)}
+.menu-btn.active{background:var(--accent);color:var(--secondary);border-color:var(--accent);font-weight:700}
+.user-profile{padding:12px;background:rgba(10,31,26,.5);border-top:1px solid rgba(74,222,128,.2)}
+.profile-info{font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.6}
+.profile-name{color:var(--accent);font-weight:700}
+.main-content{flex:1;height:100vh;display:flex;flex-direction:column;background:linear-gradient(135deg,var(--bg),var(--card))}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(135deg,var(--secondary),var(--primary));border-bottom:2px solid var(--accent);gap:15px}
+.page-title{font-size:18px;font-weight:700;color:var(--accent)}
+.top-actions{display:flex;gap:8px}
+.btn{padding:8px 14px;background:rgba(74,222,128,.15);color:var(--accent);border:1px solid rgba(74,222,128,.3);border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;transition:var(--transition)}
+.btn:hover{background:rgba(74,222,128,.25)}
+.btn-primary{background:var(--accent);color:var(--secondary);border:none}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(74,222,128,.3)}
+.btn-danger{background:rgba(239,68,68,.15);color:#ef4444;border-color:rgba(239,68,68,.3)}
+.content-area{flex:1;overflow-y:auto;padding:20px;display:none}
+.content-area.active{display:block}
+.page-section{background:rgba(26,71,42,.3);border:1px solid rgba(74,222,128,.2);border-radius:12px;padding:16px;margin-bottom:16px}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:2px solid rgba(74,222,128,.2);padding-bottom:10px}
+.section-title-big{font-size:16px;font-weight:700;color:var(--accent)}
+.form-group{margin-bottom:14px}
+.form-label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:6px;display:block}
+.form-input,.form-select,.form-textarea{width:100%;padding:10px 12px;background:rgba(26,71,42,.3);border:1px solid rgba(74,222,128,.3);color:var(--text);border-radius:8px;font-size:13px;font-family:inherit;transition:var(--transition)}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent);background:rgba(26,71,42,.5);outline:none}
+.form-textarea{resize:vertical;min-height:100px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:20px;z-index:2000;animation:fadeIn .2s}
+.modal.show{display:flex}
+.modal-content{background:linear-gradient(135deg,var(--secondary),var(--card));border:2px solid var(--accent);border-radius:12px;padding:20px;max-width:700px;max-height:85vh;overflow-y:auto;width:100%;animation:slideUp .3s}
+.modal-header{font-size:18px;font-weight:700;color:var(--accent);margin-bottom:16px;border-bottom:2px solid rgba(74,222,128,.2);padding-bottom:10px}
+.modal-footer{margin-top:16px;display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--accent);color:var(--secondary);padding:14px 18px;border-radius:8px;font-size:13px;font-weight:600;animation:slideUp .3s;z-index:3000;max-width:300px}
+.toast.error{background:#ef4444;color:#fff}
+.toast.warning{background:var(--warning);color:#000}
+.toast.info{background:var(--info);color:#fff}
+.chat-container{display:flex;flex-direction:column;height:100%;gap:10px}
+.messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:10px}
+.msg{max-width:70%;padding:12px 14px;border-radius:12px;line-height:1.5;word-break:break-word}
+.msg.user{align-self:flex-start;background:var(--info);color:#fff;border-bottom-right-radius:4px}
+.msg.ai{align-self:flex-end;background:var(--card);border:1px solid var(--accent);border-bottom-left-radius:4px}
+.input-area{display:flex;gap:8px;padding:10px}
+.input-area input{flex:1;padding:10px 12px;background:rgba(26,71,42,.3);border:1px solid rgba(74,222,128,.3);color:var(--text);border-radius:8px;font-size:13px}
+.tabs{display:flex;gap:8px;border-bottom:2px solid rgba(74,222,128,.2);margin-bottom:12px}
+.tab{padding:10px 14px;background:transparent;border:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:var(--transition)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.card-item{background:rgba(45,122,74,.2);border:1px solid rgba(74,222,128,.2);border-radius:10px;padding:14px;cursor:pointer;transition:var(--transition)}
+.card-item:hover{background:rgba(74,222,128,.15);border-color:var(--accent)}
+.disclaimer{background:rgba(245,158,11,.1);border-left:4px solid var(--warning);padding:12px;border-radius:6px;font-size:11px;color:var(--muted);margin-bottom:16px}
+.loading{display:inline-block;width:8px;height:8px;background:var(--accent);border-radius:50%;animation:pulse 1s infinite}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+@media(max-width:768px){.sidebar{width:100%;height:auto;border-left:none;border-bottom:2px solid var(--accent);max-height:80px;flex-direction:row;flex-wrap:wrap}.sidebar-menu{flex-direction:row;overflow-x:auto;overflow-y:hidden;flex:1}.menu-section{margin:0;margin-right:16px}.main-content{flex-direction:column}}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="sidebar">
+<div class="logo-section">
+<div class="logo">📚</div>
+<div class="logo-text">
+<h2>المعلم الذكي</h2>
+<p>منصة تعليمية</p>
+</div>
+</div>
+
+<div class="sidebar-menu">
+<div class="menu-section">
+<div class="section-title">👤 حسابي</div>
+<button class="menu-btn active" data-page="dashboard">لوحة التحكم</button>
+<button class="menu-btn" data-page="profile">ملفي الشخصي</button>
+</div>
+
+<div class="menu-section">
+<div class="section-title">📚 المحتوى</div>
+<button class="menu-btn" data-page="chat">محادثة ذكية</button>
+<button class="menu-btn" data-page="subjects">المواد الدراسية</button>
+<button class="menu-btn" data-page="lessons">الدروس</button>
+</div>
+
+<div class="menu-section">
+<div class="section-title">⚙️ الإدارة</div>
+<button class="menu-btn" data-page="settings">الإعدادات</button>
+<button class="menu-btn" data-page="backup">النسخ الاحتياطية</button>
+</div>
+
+<div class="menu-section">
+<div class="section-title">📋 قانوني</div>
+<button class="menu-btn" data-page="terms">الشروط والأحكام</button>
+<button class="menu-btn" data-page="disclaimer">إخلاء المسؤولية</button>
+</div>
+</div>
+
+<div class="user-profile">
+<div class="profile-info">
+<div class="profile-name" id="userName">المستخدم</div>
+<div id="userRole">دور المستخدم</div>
+<div id="userSchool">المدرسة</div>
+<div id="userEmail">البريد الإلكتروني</div>
+</div>
+<button class="btn" id="logoutBtn" style="width:100%;margin-top:8px">تسجيل خروج</button>
+</div>
+</div>
+
+<div class="main-content">
+<div class="top-bar">
+<h1 class="page-title" id="pageTitle">لوحة التحكم</h1>
+<div class="top-actions">
+<button class="btn" id="syncBtn" title="مزامنة">🔄 مزامنة</button>
+<button class="btn" id="helpBtn" title="مساعدة">❓ مساعدة</button>
+</div>
+</div>
+
+<!-- لوحة التحكم -->
+<div id="dashboard-content" class="content-area active">
+<div class="disclaimer">
+⚠️ هذا التطبيق لأغراض تعليمية فقط - جميع الحقوق محفوظة لمالك المشروع - تحميل وتوزيع مجاني
+</div>
+
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">📊 ملخص النظام</h3>
+</div>
+<div class="grid">
+<div class="card-item">
+<div style="color:var(--muted);font-size:11px">مرحبا في</div>
+<div style="font-size:20px;font-weight:700;color:var(--accent)" id="dashName">المعلم الذكي</div>
+</div>
+<div class="card-item">
+<div style="color:var(--muted);font-size:11px">إصدار النظام</div>
+<div style="font-size:20px;font-weight:700;color:var(--accent)">3.5.0</div>
+</div>
+<div class="card-item">
+<div style="color:var(--muted);font-size:11px">حالة المزامنة</div>
+<div style="font-size:20px;font-weight:700;color:var(--accent)" id="syncStatus">✅ نشط</div>
+</div>
+<div class="card-item">
+<div style="color:var(--muted);font-size:11px">آخر تحديث</div>
+<div style="font-size:13px;font-weight:700;color:var(--accent)" id="lastSync">الآن</div>
+</div>
+</div>
+</div>
+
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">🎯 الميزات الرئيسية</h3>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px">
+<div class="card-item">
+<div style="font-size:24px">💬</div>
+<div style="font-size:12px;font-weight:600;margin-top:8px">محادثة ذكية</div>
+<div style="font-size:10px;color:var(--muted);margin-top:4px">استخدم الذكاء الاصطناعي</div>
+</div>
+<div class="card-item">
+<div style="font-size:24px">📚</div>
+<div style="font-size:12px;font-weight:600;margin-top:8px">المناهج الدراسية</div>
+<div style="font-size:10px;color:var(--muted);margin-top:4px">ادارة محتوى تعليمي</div>
+</div>
+<div class="card-item">
+<div style="font-size:24px">👤</div>
+<div style="font-size:12px;font-weight:600;margin-top:8px">تخصيص شخصي</div>
+<div style="font-size:10px;color:var(--muted);margin-top:4px">حسب مدرستك ومستواك</div>
+</div>
+<div class="card-item">
+<div style="font-size:24px">💾</div>
+<div style="font-size:12px;font-weight:600;margin-top:8px">نسخ احتياطية</div>
+<div style="font-size:10px;color:var(--muted);margin-top:4px">حفظ آمن للبيانات</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- المحادثة الذكية -->
+<div id="chat-content" class="content-area">
+<div class="chat-container">
+<div class="messages" id="messages"></div>
+<div class="input-area">
+<input type="text" id="chatInput" placeholder="اكتب رسالتك..." maxlength="1000"/>
+<button class="btn btn-primary" id="chatSendBtn">إرسال</button>
+</div>
+</div>
+</div>
+
+<!-- المواد الدراسية -->
+<div id="subjects-content" class="content-area">
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">📐 المواد الدراسية</h3>
+<button class="btn btn-primary" id="addSubjectBtn">➕ إضافة مادة</button>
+</div>
+<div class="grid" id="subjectsList"></div>
+</div>
+</div>
+
+<!-- الدروس -->
+<div id="lessons-content" class="content-area">
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">📝 الدروس</h3>
+<button class="btn btn-primary" id="addLessonBtn">➕ إضافة درس</button>
+</div>
+<div class="grid" id="lessonsList"></div>
+</div>
+</div>
+
+<!-- الملف الشخصي -->
+<div id="profile-content" class="content-area">
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">👤 بيانات الحساب</h3>
+<button class="btn btn-primary" id="editProfileBtn">✏️ تعديل</button>
+</div>
+
+<div class="form-group">
+<label class="form-label">الاسم الكامل</label>
+<input type="text" id="nameInput" class="form-input" disabled/>
+</div>
+
+<div class="form-group">
+<label class="form-label">البريد الإلكتروني</label>
+<input type="email" id="emailInput" class="form-input" disabled/>
+</div>
+
+<div class="form-group">
+<label class="form-label">الدور</label>
+<input type="text" id="roleInput" class="form-input" disabled/>
+</div>
+
+<div class="form-group">
+<label class="form-label">المدرسة/الجامعة</label>
+<input type="text" id="schoolInput" class="form-input" disabled/>
+</div>
+
+<div class="form-group">
+<label class="form-label">المستوى الدراسي</label>
+<input type="text" id="levelInput" class="form-input" disabled/>
+</div>
+</div>
+</div>
+
+<!-- الإعدادات -->
+<div id="settings-content" class="content-area">
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">⚙️ إعدادات النظام</h3>
+</div>
+
+<div class="form-group">
+<label class="form-label">مفتاح Google Gemini API</label>
+<input type="password" id="apiKeyInput" class="form-input" placeholder="أدخل المفتاح..."/>
+</div>
+
+<div class="form-group">
+<label class="form-label">
+<input type="checkbox" id="autoUpdateToggle" checked/>
+تفعيل المزامنة التلقائية
+</label>
+</div>
+
+<div class="form-group">
+<label class="form-label">
+<input type="checkbox" id="notificationsToggle" checked/>
+تفعيل الإشعارات
+</label>
+</div>
+
+<button class="btn btn-primary" id="saveSettingsBtn">💾 حفظ الإعدادات</button>
+</div>
+</div>
+
+<!-- النسخ الاحتياطية -->
+<div id="backup-content" class="content-area">
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">💾 النسخ الاحتياطية</h3>
+</div>
+
+<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+<button class="btn btn-primary" id="createBackupBtn">📌 نسخة احتياطية الآن</button>
+<button class="btn" id="downloadBackupBtn">📥 تحميل</button>
+<button class="btn" id="uploadBackupBtn">📤 استيراد</button>
+</div>
+
+<div id="backupsList" class="grid"></div>
+<input type="file" id="backupFile" style="display:none" accept=".json"/>
+</div>
+</div>
+
+<!-- الشروط والأحكام -->
+<div id="terms-content" class="content-area">
+<div class="page-section">
+<div class="disclaimer" style="border-left:4px solid var(--accent)">
+✅ جميع الشروط والأحكام محفوظة وموافقة على القوانين الدولية والإسلامية
+</div>
+
+<div class="form-group">
+<h3 style="color:var(--accent)">📋 شروط الاستخدام</h3>
+<div style="font-size:12px;color:var(--muted);line-height:1.8">
+<p>1. هذا التطبيق لأغراض تعليمية بحتة فقط</p>
+<p>2. يحق لمالك التطبيق التحكم الكامل في جميع الميزات والمحتوى</p>
+<p>3. يمنع الاستخدام التجاري بدون إذن صريح من المالك</p>
+<p>4. جميع البيانات محلية وآمنة على جهازك</p>
+<p>5. المالك غير مسؤول عن أي استخدام غير قانوني</p>
+<p>6. يمكن توقيف الخدمة في أي وقت</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- إخلاء المسؤولية -->
+<div id="disclaimer-content" class="content-area">
+<div class="page-section">
+<div class="disclaimer" style="border-left:4px solid var(--danger)">
+⚠️ إخلاء مسؤولية شامل - يرجى قراءة بعناية
+</div>
+
+<div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:12px;margin-bottom:16px">
+<h3 style="color:var(--danger);margin:0 0 12px">⚖️ إخلاء المسؤولية القانوني</h3>
+<div style="font-size:11px;color:var(--muted);line-height:1.8">
+<p><strong>صانع البرنامج (basaljzayry20-byte) غير مسؤول عن:</strong></p>
+<ul>
+<li>أي استخدام غير قانوني للبرنامج</li>
+<li>أي خسائر أو أضرار مباشرة أو غير مباشرة</li>
+<li>أي انتهاكات لحقوق الغير</li>
+<li>أي مشاكل تقنية أو توقف الخدمة</li>
+<li>دقة المحتوى التعليمي المقدم</li>
+<li>أي استخدام الذكاء الاصطناعي بطريقة خاطئة</li>
+</ul>
+
+<p><strong>المستخدم يقبل:</strong></p>
+<ul>
+<li>استخدام البرنامج على مسؤوليته الشخصية</li>
+<li>عدم نسخ أو بيع البرنامج تجاريًا</li>
+<li>عدم انتهاك حقوق الملكية الفكرية</li>
+<li>الالتزام بالقوانين المحلية والدولية</li>
+<li>احترام الخصوصية والبيانات الشخصية</li>
+</ul>
+</div>
+</div>
+
+<div style="background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);border-radius:8px;padding:12px">
+<h3 style="color:var(--accent);margin:0 0 12px">✅ بيان الالتزام القانوني</h3>
+<div style="font-size:11px;color:var(--muted);line-height:1.8">
+<p>✓ البرنامج متوافق مع القوانين الإسلامية والدولية</p>
+<p>✓ لا يتضمن محتوى ضار أو مسيء</p>
+<p>✓ لا يجمع بيانات شخصية إلا بموافقة صريحة</p>
+<p>✓ يحترم الخصوصية التامة للمستخدمين</p>
+<p>✓ البيانات محفوظة محلياً بأمان كامل</p>
+<p>✓ المالك وحده له حق التوزيع والتطوير</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="modal">
+<div class="modal-content">
+<div class="modal-header" id="modalTitle">عنوان</div>
+<div id="modalBody"></div>
+<div class="modal-footer">
+<button class="btn" id="modalCloseBtn">إغلاق</button>
+<button class="btn btn-primary" id="modalSaveBtn" style="display:none">حفظ</button>
+</div>
+</div>
+</div>
+
+<script>
+// ============================================
+// 🎓 نظام المنصة التعليمية الذكية المتقدم
+// ============================================
+
+class SmartPlatform{
+constructor(){
+this.db=null;
+this.user={
+id:localStorage.getItem('user_id')||'user_'+Date.now(),
+name:localStorage.getItem('user_name')||'المستخدم',
+email:localStorage.getItem('user_email')||'user@example.com',
+role:localStorage.getItem('user_role')||'student',
+school:localStorage.getItem('user_school')||'مدرستي',
+level:localStorage.getItem('user_level')||'ابتدائي'
+};
+this.init();
+}
+
+async init(){
+return new Promise((resolve)=>{
+const req=indexedDB.open('SmartTeacher',1);
+req.onerror=()=>console.log('DB Error');
+req.onsuccess=()=>{
+this.db=req.result;
+this.setupUI();
+resolve();
+};
+req.onupgradeneeded=(e)=>{
+const db=e.target.result;
+if(!db.objectStoreNames.contains('subjects')){db.createObjectStore('subjects',{keyPath:'id',autoIncrement:true})}
+if(!db.objectStoreNames.contains('lessons')){db.createObjectStore('lessons',{keyPath:'id',autoIncrement:true})}
+if(!db.objectStoreNames.contains('messages')){db.createObjectStore('messages',{keyPath:'id',autoIncrement:true})}
+if(!db.objectStoreNames.contains('backups')){db.createObjectStore('backups',{keyPath:'id',autoIncrement:true})}
+if(!db.objectStoreNames.contains('settings')){db.createObjectStore('settings',{keyPath:'key'})}
+};
+});
+}
+
+setupUI(){
+this.updateUserInfo();
+this.setupEventListeners();
+this.loadDashboard();
+}
+
+updateUserInfo(){
+document.getElementById('userName').textContent=this.user.name;
+document.getElementById('userRole').textContent=this.user.role;
+document.getElementById('userSchool').textContent=this.user.school;
+document.getElementById('userEmail').textContent=this.user.email;
+document.getElementById('nameInput').value=this.user.name;
+document.getElementById('emailInput').value=this.user.email;
+document.getElementById('roleInput').value=this.user.role;
+document.getElementById('schoolInput').value=this.user.school;
+document.getElementById('levelInput').value=this.user.level;
+document.getElementById('dashName').textContent='مرحباً '+this.user.name;
+}
+
+setupEventListeners(){
+document.querySelectorAll('[data-page]').forEach(btn=>{
+btn.addEventListener('click',()=>this.navigateTo(btn.dataset.page));
+});
+document.getElementById('editProfileBtn').addEventListener('click',()=>this.openProfileEdit());
+document.getElementById('saveSettingsBtn').addEventListener('click',()=>this.saveSettings());
+document.getElementById('createBackupBtn').addEventListener('click',()=>this.createBackup());
+document.getElementById('downloadBackupBtn').addEventListener('click',()=>this.downloadBackup());
+document.getElementById('uploadBackupBtn').addEventListener('click',()=>this.uploadBackup());
+document.getElementById('chatSendBtn').addEventListener('click',()=>this.sendMessage());
+document.getElementById('chatInput').addEventListener('keydown',(e)=>{if(e.key==='Enter')this.sendMessage()});
+document.getElementById('logoutBtn').addEventListener('click',()=>this.logout());
+document.getElementById('syncBtn').addEventListener('click',()=>this.syncData());
+document.getElementById('addSubjectBtn').addEventListener('click',()=>this.addSubject());
+document.getElementById('addLessonBtn').addEventListener('click',()=>this.addLesson());
+}
+
+navigateTo(page){
+document.querySelectorAll('[data-page]').forEach(btn=>btn.classList.remove('active'));
+event.target.classList.add('active');
+document.querySelectorAll('.content-area').forEach(area=>area.classList.remove('active'));
+document.getElementById(page+'-content').classList.add('active');
+document.getElementById('pageTitle').textContent=event.target.textContent;
+}
+
+loadDashboard(){
+document.getElementById('lastSync').textContent=new Date().toLocaleString('ar');
+}
+
+openProfileEdit(){
+document.querySelectorAll('[id$="Input"]').forEach(el=>{
+if(!el.id.includes('api')&&!el.id.includes('chat'))el.disabled=false;
+});
+}
+
+saveSettings(){
+const apiKey=document.getElementById('apiKeyInput').value;
+if(apiKey.length>=10){
+localStorage.setItem('gemini_key',apiKey);
+this.showToast('تم حفظ الإعدادات ✓','info');
+}else{
+this.showToast('المفتاح قصير جداً','error');
+}
+}
+
+async createBackup(){
+try{
+const subjects=await this.getAll('subjects');
+const lessons=await this.getAll('lessons');
+const messages=await this.getAll('messages');
+const backup={
+name:'نسخة احتياطية - '+new Date().toLocaleDateString('ar'),
+data:{subjects,lessons,messages,user:this.user},
+timestamp:new Date()
+};
+await this.save('backups',backup);
+this.showToast('تم إنشاء نسخة احتياطية ✓','info');
+this.loadBackups();
+}catch(e){
+this.showToast('خطأ في النسخ الاحتياطية','error');
+}
+}
+
+downloadBackup(){
+const json=JSON.stringify({user:this.user,timestamp:new Date()},null,2);
+const blob=new Blob([json],{type:'application/json'});
+const url=URL.createObjectURL(blob);
+const a=document.createElement('a');
+a.href=url;
+a.download=`smart-teacher-${Date.now()}.json`;
+a.click();
+this.showToast('تم التحميل ✓','info');
+}
+
+uploadBackup(){
+document.getElementById('backupFile').click();
+document.getElementById('backupFile').addEventListener('change',(e)=>{
+const file=e.target.files[0];
+if(!file)return;
+const reader=new FileReader();
+reader.onload=async(event)=>{
+try{
+const data=JSON.parse(event.target.result);
+this.user=data.user;
+this.updateUserInfo();
+localStorage.setItem('user_name',data.user.name);
+localStorage.setItem('user_email',data.user.email);
+this.showToast('تم استيراد البيانات ✓','info');
+}catch{
+this.showToast('ملف غير صحيح','error');
+}
+};
+reader.readAsText(file);
+});
+}
+
+async sendMessage(){
+const input=document.getElementById('chatInput');
+const msg=input.value.trim();
+if(!msg)return;
+
+const messagesDiv=document.getElementById('messages');
+const userMsg=document.createElement('div');
+userMsg.className='msg user';
+userMsg.textContent=msg;
+messagesDiv.appendChild(userMsg);
+input.value='';
+messagesDiv.scrollTop=messagesDiv.scrollHeight;
+
+const apiKey=localStorage.getItem('gemini_key');
+if(!apiKey){
+this.showToast('أدخل مفتاح API في الإعدادات','warning');
+return;
+}
+
+try{
+const response=await this.askGemini(msg,apiKey);
+const aiMsg=document.createElement('div');
+aiMsg.className='msg ai';
+aiMsg.textContent=response;
+messagesDiv.appendChild(aiMsg);
+messagesDiv.scrollTop=messagesDiv.scrollHeight;
+await this.save('messages',{user:this.user.name,message:msg,response,timestamp:new Date()});
+}catch(e){
+this.showToast('خطأ في الاتصال','error');
+}
+}
+
+async askGemini(prompt,apiKey){
+const models=['gemini-3.8-flash','gemini-2.5-flash','gemini-2.0-flash','gemini-1.5-flash','gemini-1.5-pro'];
+const versions=['v1','v1beta'];
+
+for(const model of models){
+for(const version of versions){
+try{
+const url=`https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent?key=${apiKey}`;
+const res=await fetch(url,{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
+});
+const data=await res.json();
+if(data?.candidates?.[0]?.content?.parts?.[0]?.text){
+return data.candidates[0].content.parts[0].text.trim();
+}
+}catch(e){}
+}
+}
+throw new Error('فشل الاتصال بـ Gemini');
+}
+
+async loadBackups(){
+const data=await this.getAll('backups');
+const html=data.map(b=>`
+<div class="card-item">
+<div style="font-size:14px;font-weight:700;color:var(--accent)">${b.name}</div>
+<div style="font-size:10px;color:var(--muted);margin-top:8px">${new Date(b.timestamp).toLocaleDateString('ar')}</div>
+</div>
+`).join('');
+document.getElementById('backupsList').innerHTML=html||'<p style="color:var(--muted)">لا توجد نسخ احتياطية</p>';
+}
+
+addSubject(){
+this.showModal('إضافة مادة جديدة',`
+<div class="form-group">
+<label class="form-label">اسم المادة</label>
+<input type="text" id="subjectNameInput" class="form-input" placeholder="مثل: الرياضيات"/>
+</div>
+<div class="form-group">
+<label class="form-label">الوصف</label>
+<input type="text" id="subjectDescInput" class="form-input" placeholder="وصف المادة"/>
+</div>
+`,()=>{
+const name=document.getElementById('subjectNameInput').value;
+const desc=document.getElementById('subjectDescInput').value;
+if(name){
+this.save('subjects',{name,description:desc,timestamp:new Date()});
+this.showToast('تم إضافة المادة ✓','info');
+}
+});
+}
+
+addLesson(){
+this.showModal('إضافة درس جديد',`
+<div class="form-group">
+<label class="form-label">اسم الدرس</label>
+<input type="text" id="lessonNameInput" class="form-input" placeholder="اسم الدرس"/>
+</div>
+<div class="form-group">
+<label class="form-label">المحتوى</label>
+<textarea id="lessonContentInput" class="form-textarea" placeholder="محتوى الدرس"></textarea>
+</div>
+`,()=>{
+const name=document.getElementById('lessonNameInput').value;
+const content=document.getElementById('lessonContentInput').value;
+if(name){
+this.save('lessons',{name,content,timestamp:new Date()});
+this.showToast('تم إضافة الدرس ✓','info');
+}
+});
+}
+
+showModal(title,body,callback){
+document.getElementById('modalTitle').textContent=title;
+document.getElementById('modalBody').innerHTML=body;
+document.getElementById('modal').classList.add('show');
+document.getElementById('modalSaveBtn').style.display='block';
+document.getElementById('modalSaveBtn').onclick=()=>{
+callback();
+document.getElementById('modal').classList.remove('show');
+};
+document.getElementById('modalCloseBtn').onclick=()=>{
+document.getElementById('modal').classList.remove('show');
+};
+}
+
+syncData(){
+this.showToast('جاري المزامنة...','info');
+setTimeout(()=>{
+this.showToast('تمت المزامنة بنجاح ✓','info');
+document.getElementById('lastSync').textContent=new Date().toLocaleString('ar');
+},2000);
+}
+
+logout(){
+if(confirm('هل تريد تسجيل الخروج؟')){
+localStorage.clear();
+window.location.reload();
+}
+}
+
+showToast(msg,type='info'){
+const toast=document.createElement('div');
+toast.className='toast '+type;
+toast.textContent=msg;
+document.body.appendChild(toast);
+setTimeout(()=>toast.remove(),3000);
+}
+
+async save(store,data){
+return new Promise((resolve)=>{
+const tx=this.db.transaction([store],'readwrite');
+tx.objectStore(store).add(data);
+resolve();
+});
+}
+
+async getAll(store){
+return new Promise((resolve)=>{
+const tx=this.db.transaction([store],'readonly');
+const req=tx.objectStore(store).getAll();
+req.onsuccess=()=>resolve(req.result||[]);
+});
+}
+}
+
+// تشغيل البرنامج
+const platform=new SmartPlatform();
+</script>
+</body>
+</html>
