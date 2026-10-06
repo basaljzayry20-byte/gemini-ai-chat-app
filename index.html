@@ -4,33 +4,39 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#1a472a"/>
-<title>المعلم الذكي - تطبيق تعليمي</title>
+<meta name="description" content="المعلم الذكي - منصة تعليمية ذكية مدعومة بـ AI"/>
+<title>المعلم الذكي - تطبيق تعليمي متقدم</title>
 <style>
 :root{
---primary:#2d7a4a;--secondary:#1a472a;--accent:#4ade80;--bg:#0a1f1a;--card:#132e23;--text:#e8f5e9;--muted:#a1d5b8;--danger:#ef4444;--warn:#f59e0b;--shadow:0 10px 30px rgba(0,0,0,.4);--transition:all .2s cubic-bezier(.4,0,.2,1)
+--primary:#2d7a4a;--secondary:#1a472a;--accent:#4ade80;--bg:#0a1f1a;--card:#132e23;--text:#e8f5e9;--muted:#a1d5b8;--danger:#ef4444;--warn:#f59e0b;--success:#10b981;--shadow:0 10px 30px rgba(0,0,0,.4);--transition:all .2s cubic-bezier(.4,0,.2,1)
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
+html,body{margin:0;height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;direction:rtl}
+body.ltr{direction:ltr}
 body{display:flex;justify-content:center;align-items:stretch}
-#app{width:100%;max-width:640px;height:100vh;display:flex;flex-direction:column;background:linear-gradient(135deg,var(--bg),var(--secondary))}
-.header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:linear-gradient(135deg,var(--secondary),var(--primary));border-bottom:2px solid var(--accent);gap:10px}
-.logo{width:40px;height:40px;background:linear-gradient(135deg,var(--accent),#22c55e);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:20px}
-.header-title{flex:1}
+#app{width:100%;max-width:720px;height:100vh;display:flex;flex-direction:column;background:linear-gradient(135deg,var(--bg),var(--secondary))}
+.header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:linear-gradient(135deg,var(--secondary),var(--primary));border-bottom:3px solid var(--accent);gap:10px;flex-wrap:wrap}
+.logo{width:40px;height:40px;background:linear-gradient(135deg,var(--accent),#22c55e);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:22px;box-shadow:0 4px 12px rgba(74,222,128,.3)}
+.header-title{flex:1;min-width:150px}
 .header-title h1{margin:0;font-size:18px;color:var(--accent);font-weight:700}
-.header-title p{margin:2px 0 0;font-size:11px;color:var(--muted)}
+.header-title p{margin:2px 0 0;font-size:10px;color:var(--muted)}
+.header-btns{display:flex;gap:6px}
 .header-btn{padding:8px 12px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.1);color:var(--accent);border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;transition:var(--transition)}
 .header-btn:hover{background:rgba(74,222,128,.2);border-color:var(--accent)}
-.quick-actions{display:flex;gap:6px;padding:10px 12px;background:rgba(45,122,74,.3);border-bottom:1px solid rgba(74,222,128,.2);overflow-x:auto}
+.quick-actions{display:flex;gap:6px;padding:10px 12px;background:rgba(45,122,74,.2);border-bottom:1px solid rgba(74,222,128,.2);overflow-x:auto;scroll-behavior:smooth}
 .action-btn{padding:6px 12px;background:rgba(74,222,128,.15);color:var(--accent);border:1px solid rgba(74,222,128,.3);border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;white-space:nowrap;transition:var(--transition)}
 .action-btn:hover{background:var(--accent);color:var(--secondary)}
-.status{padding:10px 14px;font-size:11px;background:rgba(10,31,26,.7);border-bottom:1px solid rgba(74,222,128,.2);display:flex;align-items:center;gap:6px;color:var(--muted);min-height:36px}
+.status{padding:10px 14px;font-size:11px;background:rgba(10,31,26,.7);border-bottom:1px solid rgba(74,222,128,.2);display:flex;align-items:center;gap:6px;color:var(--muted);min-height:36px;animation:fadeIn .3s}
 .status-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse .8s infinite}
+.status.success .status-dot{background:#10b981}
+.status.error .status-dot{background:var(--danger)}
 .chat{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
 .msg{max-width:85%;padding:12px 14px;border-radius:14px;line-height:1.6;word-break:break-word;animation:slideIn .3s}
-.msg.user{align-self:flex-start;background:linear-gradient(135deg,var(--primary),var(--secondary));border:1px solid rgba(74,222,128,.2)}
-.msg.ai{align-self:flex-end;background:rgba(26,71,42,.5);border:1px solid rgba(74,222,128,.3)}
-.msg.system{align-self:center;background:rgba(74,222,128,.1);color:var(--accent);font-size:12px;max-width:70%}
+.msg.user{align-self:flex-start;background:linear-gradient(135deg,var(--primary),var(--secondary));border:1px solid rgba(74,222,128,.2);border-radius:0 14px 14px 14px}
+.msg.ai{align-self:flex-end;background:rgba(26,71,42,.5);border:1px solid rgba(74,222,128,.3);border-radius:14px 0 14px 14px}
+.msg.system{align-self:center;background:rgba(74,222,128,.1);color:var(--accent);font-size:12px;max-width:70%;border-radius:8px}
 .msg-meta{font-size:9px;opacity:.6;margin-top:4px;color:var(--muted)}
 .input-section{padding:12px;border-top:1px solid rgba(74,222,128,.2);background:rgba(10,31,26,.95);display:flex;gap:8px;align-items:flex-end}
 .input-wrapper{flex:1;position:relative}
@@ -40,35 +46,51 @@ body{display:flex;justify-content:center;align-items:stretch}
 .send-btn{background:linear-gradient(135deg,var(--accent),#22c55e);color:var(--secondary);border:none;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer;transition:var(--transition)}
 .send-btn:disabled{opacity:.5;cursor:not-allowed}
 .send-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 4px 12px rgba(74,222,128,.3)}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;padding:20px;z-index:1000}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:20px;z-index:2000;animation:fadeIn .2s}
 .modal.show{display:flex}
-.modal-content{width:min(500px,95vw);background:linear-gradient(135deg,var(--secondary),var(--card));border:2px solid var(--accent);border-radius:16px;padding:20px;max-height:90vh;overflow-y:auto;animation:slideUp .3s}
-.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;border-bottom:2px solid rgba(74,222,128,.2);padding-bottom:12px}
-.modal-header h2{margin:0;font-size:18px;color:var(--accent)}
-.modal-close{background:none;border:none;color:var(--accent);cursor:pointer;font-size:24px}
-.form-group{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
-.form-label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase}
-.form-input,.form-select{width:100%;border:1px solid rgba(74,222,128,.3);background:rgba(26,71,42,.3);color:var(--text);border-radius:8px;padding:10px 12px;outline:none;font-size:14px;transition:var(--transition)}
-.form-input:focus,.form-select:focus{border-color:var(--accent);background:rgba(26,71,42,.5)}
-.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
-.btn{border:none;border-radius:8px;padding:10px 16px;font-weight:600;cursor:pointer;transition:var(--transition);font-size:14px}
+.modal-content{width:min(520px,95vw);background:linear-gradient(135deg,var(--secondary),var(--card));border:2px solid var(--accent);border-radius:18px;padding:20px;max-height:90vh;overflow-y:auto;animation:slideUp .3s;box-shadow:var(--shadow)}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;border-bottom:2px solid rgba(74,222,128,.2);padding-bottom:14px}
+.modal-header h2{margin:0;font-size:19px;color:var(--accent);font-weight:700}
+.modal-close{background:none;border:none;color:var(--accent);cursor:pointer;font-size:26px;transition:var(--transition)}
+.modal-close:hover{transform:scale(1.2)}
+.form-group{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.form-label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.form-input,.form-select{width:100%;border:1px solid rgba(74,222,128,.3);background:rgba(26,71,42,.3);color:var(--text);border-radius:8px;padding:11px 12px;outline:none;font-size:14px;transition:var(--transition)}
+.form-input:focus,.form-select:focus{border-color:var(--accent);background:rgba(26,71,42,.5);box-shadow:0 0 0 3px rgba(74,222,128,.1)}
+.form-input::placeholder{color:var(--muted)}
+.form-error{color:var(--danger);font-size:11px;margin-top:4px}
+.form-success{color:var(--success);font-size:11px;margin-top:4px}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid rgba(74,222,128,.2)}
+.btn{border:none;border-radius:8px;padding:11px 18px;font-weight:600;cursor:pointer;transition:var(--transition);font-size:14px}
 .btn-primary{background:var(--accent);color:var(--secondary)}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(74,222,128,.3)}
 .btn-secondary{background:rgba(74,222,128,.1);color:var(--accent);border:1px solid rgba(74,222,128,.3)}
-.subject-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:14px 0}
-.subject-card{padding:12px;background:rgba(45,122,74,.2);border:1px solid rgba(74,222,128,.3);border-radius:10px;cursor:pointer;transition:var(--transition);text-align:center}
+.btn-secondary:hover{background:rgba(74,222,128,.15)}
+.btn-danger{background:rgba(239,68,68,.15);color:var(--danger);border:1px solid rgba(239,68,68,.3)}
+.subject-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:14px 0}
+.subject-card{padding:14px;background:rgba(45,122,74,.2);border:2px solid rgba(74,222,128,.2);border-radius:10px;cursor:pointer;transition:var(--transition);text-align:center;font-weight:600}
 .subject-card:hover{background:rgba(74,222,128,.2);border-color:var(--accent)}
-.subject-card.selected{background:var(--accent);color:var(--secondary)}
+.subject-card.selected{background:var(--accent);color:var(--secondary);border-color:var(--accent)}
 .level-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
-.level-btn{padding:12px;background:rgba(45,122,74,.2);border:1px solid rgba(74,222,128,.3);border-radius:10px;cursor:pointer;transition:var(--transition);color:var(--text);font-weight:600}
-.level-btn:hover{background:rgba(74,222,128,.2)}
-.level-btn.selected{background:var(--accent);color:var(--secondary)}
-.tabs{display:flex;gap:8px;border-bottom:1px solid rgba(74,222,128,.2);padding-bottom:8px;margin-bottom:12px}
-.tab{padding:8px 12px;border:none;background:none;color:var(--muted);cursor:pointer;font-size:12px;font-weight:600;border-bottom:2px solid transparent;transition:var(--transition)}
+.level-btn{padding:14px;background:rgba(45,122,74,.2);border:2px solid rgba(74,222,128,.2);border-radius:10px;cursor:pointer;transition:var(--transition);color:var(--text);font-weight:600}
+.level-btn:hover{background:rgba(74,222,128,.2);border-color:var(--accent)}
+.level-btn.selected{background:var(--accent);color:var(--secondary);border-color:var(--accent)}
+.tabs{display:flex;gap:8px;border-bottom:2px solid rgba(74,222,128,.2);padding-bottom:10px;margin-bottom:14px;overflow-x:auto}
+.tab{padding:10px 14px;border:none;background:none;color:var(--muted);cursor:pointer;font-size:13px;font-weight:700;border-bottom:3px solid transparent;transition:var(--transition);white-space:nowrap}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-.history-item{background:rgba(45,122,74,.2);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:var(--transition)}
-.history-item:hover{background:rgba(74,222,128,.15)}
+.tab:hover{color:var(--text)}
+.history-item{background:rgba(45,122,74,.2);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:11px 12px;margin-bottom:8px;cursor:pointer;transition:var(--transition)}
+.history-item:hover{background:rgba(74,222,128,.15);border-color:var(--accent)}
+.history-item-text{color:var(--text);margin-bottom:4px;font-weight:500}
+.history-item-time{color:var(--muted);font-size:10px}
 .spinner{display:inline-block;width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse .8s infinite;margin-right:6px}
+.separator{height:1px;background:rgba(74,222,128,.2);margin:14px 0}
+.settings-section{margin-bottom:16px}
+.settings-section-title{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;border-bottom:1px solid rgba(74,222,128,.2);padding-bottom:8px}
+.checkbox-group{display:flex;align-items:center;gap:8px;margin:10px 0}
+.checkbox-group input{width:18px;height:18px;cursor:pointer}
+.checkbox-group label{flex:1;cursor:pointer;font-size:13px}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%{transform:scale(1);opacity:1}50%{transform:scale(1.2);opacity:.6}100%{transform:scale(1);opacity:1}}
@@ -76,6 +98,7 @@ body{display:flex;justify-content:center;align-items:stretch}
 .msg{max-width:90%}
 .modal-content{width:95vw}
 .subject-grid{grid-template-columns:repeat(2,1fr)}
+.header-title h1{font-size:16px}
 }
 </style>
 </head>
@@ -84,10 +107,13 @@ body{display:flex;justify-content:center;align-items:stretch}
 <div class="header">
 <div class="logo">📚</div>
 <div class="header-title">
-<h1>المعلم الذكي</h1>
-<p>منصة تعليمية ذكية</p>
+<h1 id="appTitle">المعلم الذكي</h1>
+<p id="appSubtitle">منصة تعليمية ذكية</p>
 </div>
-<button class="header-btn" id="settingsBtn">⚙️</button>
+<div class="header-btns">
+<button class="header-btn" id="historyBtn" title="السجل">📋</button>
+<button class="header-btn" id="settingsBtn" title="الإعدادات">⚙️</button>
+</div>
 </div>
 
 <div class="quick-actions" id="quickActions">
@@ -98,7 +124,7 @@ body{display:flex;justify-content:center;align-items:stretch}
 <button class="action-btn" data-action="translate">ترجم</button>
 </div>
 
-<div class="status">
+<div class="status" id="status">
 <span class="status-dot"></span>
 <span id="statusText">جاهز</span>
 </div>
@@ -120,8 +146,14 @@ body{display:flex;justify-content:center;align-items:stretch}
 <button class="modal-close" id="modalClose">&times;</button>
 </div>
 
-<div id="setupStep" style="display:none">
-<h3 style="color:var(--accent)">خطوة 1: اختر المادة</h3>
+<div class="tabs" id="tabsContainer">
+<button class="tab active" data-tab="setup">الإعداد</button>
+<button class="tab" data-tab="api">API</button>
+<button class="tab" data-tab="settings">الإعدادات</button>
+</div>
+
+<div id="setupTab">
+<h3 style="color:var(--accent);font-size:14px;margin:0 0 12px">اختر المادة</h3>
 <div class="subject-grid" id="subjectGrid">
 <div class="subject-card" data-subject="رياضيات">📐 رياضيات</div>
 <div class="subject-card" data-subject="فيزياء">⚛️ فيزياء</div>
@@ -134,7 +166,7 @@ body{display:flex;justify-content:center;align-items:stretch}
 <div class="subject-card" data-subject="برمجة">💻 برمجة</div>
 </div>
 
-<h3 style="color:var(--accent);margin-top:16px">خطوة 2: اختر المستوى</h3>
+<h3 style="color:var(--accent);font-size:14px;margin:16px 0 12px">اختر المستوى</h3>
 <div class="level-grid" id="levelGrid">
 <button class="level-btn" data-level="ابتدائي">🎒 ابتدائي</button>
 <button class="level-btn" data-level="متوسط">📖 متوسط</button>
@@ -143,43 +175,87 @@ body{display:flex;justify-content:center;align-items:stretch}
 </div>
 </div>
 
-<div id="settingsStep" style="display:none">
+<div id="apiTab" style="display:none">
+<div class="settings-section">
+<div class="settings-section-title">Google Gemini API</div>
 <div class="form-group">
-<label class="form-label">مفتاح Google Gemini API</label>
-<input class="form-input" id="apiKeyInput" type="password" placeholder="أدخل المفتاح..."/>
-<small style="color:var(--muted);font-size:11px">احصل على المفتاح من aistudio.google.com</small>
+<label class="form-label" for="apiKeyInput">مفتاح API</label>
+<input id="apiKeyInput" class="form-input" type="password" placeholder="أدخل مفتاح Gemini..."/>
+<small style="color:var(--muted);font-size:10px">احصل على المفتاح من: <strong>aistudio.google.com</strong></small>
+<div id="apiError" class="form-error" style="display:none"></div>
 </div>
 
 <div class="form-group">
-<label class="form-label">اللغة</label>
-<select class="form-select" id="langSelect">
-<option value="ar">العربية</option>
-<option value="en">English</option>
+<label class="form-label" for="modelSelect">النموذج (اختياري)</label>
+<select id="modelSelect" class="form-select">
+<option value="">تلقائي</option>
+<option value="gemini-3.8-flash">Gemini 3.8 Flash</option>
+<option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+<option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+<option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+<option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+</select>
+</div>
+</div>
+
+<div class="settings-section">
+<div class="settings-section-title">Google Search API</div>
+<div class="form-group">
+<label class="form-label" for="searchKeyInput">مفتاح البحث (اختياري)</label>
+<input id="searchKeyInput" class="form-input" type="password" placeholder="مفتاح Custom Search..."/>
+<small style="color:var(--muted);font-size:10px">من: <strong>programmablesearchengine.google.com</strong></small>
+</div>
+<div class="form-group">
+<label class="form-label" for="searchEngineInput">معرّف محرك البحث</label>
+<input id="searchEngineInput" class="form-input" type="text" placeholder="Search Engine ID..."/>
+</div>
+</div>
+</div>
+
+<div id="settingsTab" style="display:none">
+<div class="settings-section">
+<div class="settings-section-title">اللغة والواجهة</div>
+<div class="form-group">
+<label class="form-label" for="langSelect">اللغة</label>
+<select id="langSelect" class="form-select">
+<option value="ar">🇸🇦 العربية</option>
+<option value="en">🇬🇧 الإنجليزية</option>
 </select>
 </div>
 
-<div class="form-group">
-<label class="form-label">
-<input type="checkbox" id="autoSearchToggle" checked/> البحث التلقائي عند الحاجة
-</label>
+<div class="checkbox-group">
+<input type="checkbox" id="darkModeToggle" checked/>
+<label for="darkModeToggle">الوضع الليلي</label>
+</div>
+
+<div class="checkbox-group">
+<input type="checkbox" id="autoSearchToggle" checked/>
+<label for="autoSearchToggle">البحث التلقائي عند الحاجة</label>
+</div>
+
+<div class="checkbox-group">
+<input type="checkbox" id="notificationsToggle" checked/>
+<label for="notificationsToggle">الإشعارات</label>
 </div>
 </div>
 
-<div id="historyStep" style="display:none">
-<h3 style="color:var(--accent)">السجل</h3>
-<div id="historyContainer"></div>
+<div class="settings-section">
+<div class="settings-section-title">البيانات</div>
+<button id="exportBtn" class="btn btn-secondary" style="width:100%;margin-bottom:8px">📥 تصدير المحادثات</button>
+<button id="clearHistoryBtn" class="btn btn-danger" style="width:100%">🗑️ حذف السجل</button>
+</div>
 </div>
 
 <div class="form-actions">
-<button class="btn btn-secondary" id="cancelBtn">إلغاء</button>
-<button class="btn btn-primary" id="saveBtn">حفظ</button>
+<button id="cancelBtn" class="btn btn-secondary">إلغاء</button>
+<button id="saveBtn" class="btn btn-primary">💾 حفظ</button>
 </div>
 </div>
 </div>
 
 <script>
 // =====================================================
-// 🎓 تطبيق المعلم الذكي - نظام تعليمي متقدم
+// 🎓 المعلم الذكي - نظام تعليمي متقدم كامل
 // =====================================================
 
 const CONFIG={
@@ -187,20 +263,84 @@ SUBJECTS:['رياضيات','فيزياء','كيمياء','أحياء','لغة ع
 LEVELS:['ابتدائي','متوسط','إعدادي','جامعي'],
 MODELS:['gemini-3.8-flash','gemini-2.5-flash','gemini-2.0-flash','gemini-1.5-flash','gemini-1.5-pro','gemini-pro'],
 VERSIONS:['v1','v1beta'],
-API_URL:'https://generativelanguage.googleapis.com'
+API_URL:'https://generativelanguage.googleapis.com',
+SEARCH_API:'https://www.googleapis.com/customsearch/v1',
+DB_NAME:'AlMoallem',
+STORE_NAME:'conversations',
+MAX_HISTORY:100
 };
 
 const i18n={
-ar:{ready:'جاهز',thinking:'جاري التفكير...',explain:'اشرح لي هذا الموضوع',summarize:'لخص النقاط الرئيسية',test:'اختبرني فيما تعلمت',examples:'أعطني أمثلة عملية',translate:'ترجم للإنجليزية',search:'جاري البحث في الإنترنت...',error:'حدث خطأ'},
-en:{ready:'Ready',thinking:'Thinking...',explain:'Explain this topic to me',summarize:'Summarize the main points',test:'Test me on what I learned',examples:'Give me practical examples',translate:'Translate to English',search:'Searching the internet...',error:'An error occurred'}
+ar:{
+ready:'جاهز',thinking:'جاري التفكير...',error:'حدث خطأ',searching:'جاري البحث...',saved:'تم الحفظ ✓',
+explain:'اشرح هذا الموضوع بالتفصيل',summarize:'لخص النقاط الرئيسية',test:'اختبرني فيما تعلمت',
+examples:'أعطني أمثلة عملية',translate:'ترجم للإنجليزية',noKey:'أدخل مفتاح API أولاً',
+keyShort:'المفتاح قصير جداً'
+},
+en:{
+ready:'Ready',thinking:'Thinking...',error:'An error occurred',searching:'Searching...',saved:'Saved ✓',
+explain:'Explain this topic in detail',summarize:'Summarize the main points',test:'Test me on what I learned',
+examples:'Give me practical examples',translate:'Translate to English',noKey:'Enter API key first',
+keyShort:'Key is too short'
+}
 };
 
+class MoallemDB{
+constructor(){
+this.db=null;
+this.init();
+}
+async init(){
+return new Promise((resolve,reject)=>{
+const req=indexedDB.open(CONFIG.DB_NAME,1);
+req.onerror=()=>reject('DB Error');
+req.onsuccess=()=>{this.db=req.result;resolve()};
+req.onupgradeneeded=(e)=>{
+const db=e.target.result;
+if(!db.objectStoreNames.contains(CONFIG.STORE_NAME)){
+db.createObjectStore(CONFIG.STORE_NAME,{keyPath:'id',autoIncrement:true});
+}
+}
+});
+}
+async save(data){
+return new Promise((resolve,reject)=>{
+const tx=this.db.transaction([CONFIG.STORE_NAME],'readwrite');
+const store=tx.objectStore(CONFIG.STORE_NAME);
+const req=store.add({...data,timestamp:new Date()});
+req.onsuccess=()=>resolve(req.result);
+req.onerror=()=>reject(req.error);
+});
+}
+async getAll(){
+return new Promise((resolve,reject)=>{
+const tx=this.db.transaction([CONFIG.STORE_NAME],'readonly');
+const store=tx.objectStore(CONFIG.STORE_NAME);
+const req=store.getAll();
+req.onsuccess=()=>resolve(req.result.slice(-CONFIG.MAX_HISTORY));
+req.onerror=()=>reject(req.error);
+});
+}
+async clear(){
+return new Promise((resolve,reject)=>{
+const tx=this.db.transaction([CONFIG.STORE_NAME],'readwrite');
+const store=tx.objectStore(CONFIG.STORE_NAME);
+const req=store.clear();
+req.onsuccess=()=>resolve();
+req.onerror=()=>reject(req.error);
+});
+}
+}
+
+const db=new MoallemDB();
+
 const state={
-lang:'ar',
+lang:localStorage.getItem('moallem_lang')||'ar',
 subject:'',
 level:'',
 messages:[],
-waiting:false
+waiting:false,
+session:Date.now()
 };
 
 const DOM={
@@ -209,48 +349,218 @@ chat:document.getElementById('chat'),
 msgInput:document.getElementById('msgInput'),
 sendBtn:document.getElementById('sendBtn'),
 statusText:document.getElementById('statusText'),
+status:document.getElementById('status'),
 modal:document.getElementById('modal'),
 settingsBtn:document.getElementById('settingsBtn'),
+historyBtn:document.getElementById('historyBtn'),
+modalClose:document.getElementById('modalClose'),
 apiKeyInput:document.getElementById('apiKeyInput'),
+searchKeyInput:document.getElementById('searchKeyInput'),
+searchEngineInput:document.getElementById('searchEngineInput'),
 langSelect:document.getElementById('langSelect'),
+modelSelect:document.getElementById('modelSelect'),
+autoSearchToggle:document.getElementById('autoSearchToggle'),
 saveBtn:document.getElementById('saveBtn'),
 cancelBtn:document.getElementById('cancelBtn'),
-modalClose:document.getElementById('modalClose'),
-setupStep:document.getElementById('setupStep'),
-settingsStep:document.getElementById('settingsStep'),
-historyStep:document.getElementById('historyStep'),
 subjectGrid:document.getElementById('subjectGrid'),
 levelGrid:document.getElementById('levelGrid'),
 quickActions:document.getElementById('quickActions'),
-historyContainer:document.getElementById('historyContainer')
+exportBtn:document.getElementById('exportBtn'),
+clearHistoryBtn:document.getElementById('clearHistoryBtn'),
+tabsContainer:document.getElementById('tabsContainer'),
+setupTab:document.getElementById('setupTab'),
+apiTab:document.getElementById('apiTab'),
+settingsTab:document.getElementById('settingsTab'),
+apiError:document.getElementById('apiError')
 };
 
 function t(key){return(i18n[state.lang]&&i18n[state.lang][key])||i18n.ar[key]||''}
-function setStatus(text){DOM.statusText.textContent=text}
+function setStatus(text,type=''){DOM.status.className='status '+(type?type:'');DOM.statusText.textContent=text}
 function addMessage(text,type,meta=''){const node=document.createElement('div');node.className='msg '+type;const content=document.createElement('div');content.textContent=text;node.appendChild(content);if(meta){const metaEl=document.createElement('div');metaEl.className='msg-meta';metaEl.textContent=meta;node.appendChild(metaEl)}DOM.chat.appendChild(node);DOM.chat.scrollTop=DOM.chat.scrollHeight;return node}
-function showModal(step){DOM.modal.classList.add('show');DOM.setupStep.style.display=step==='setup'?'block':'none';DOM.settingsStep.style.display=step==='settings'?'block':'none';DOM.historyStep.style.display=step==='history'?'block':'none'}
+function showModal(tab='setup'){DOM.modal.classList.add('show');document.querySelectorAll('.tabs .tab').forEach(t=>t.classList.remove('active'));document.querySelector(`.tabs .tab[data-tab="${tab}"]`)?.classList.add('active');document.getElementById('setupTab').style.display=tab==='setup'?'block':'none';document.getElementById('apiTab').style.display=tab==='api'?'block':'none';document.getElementById('settingsTab').style.display=tab==='settings'?'block':'none'}
 function hideModal(){DOM.modal.classList.remove('show')}
-function saveSettings(){const key=DOM.apiKeyInput.value.trim();if(!key||key.length<10){alert('المفتاح غير صحيح');return}localStorage.setItem('gemini_key',key);localStorage.setItem('lang',DOM.langSelect.value);state.lang=DOM.langSelect.value;hideModal()}
-function initSetup(){DOM.subjectGrid.querySelectorAll('.subject-card').forEach(card=>{card.addEventListener('click',()=>{DOM.subjectGrid.querySelectorAll('.subject-card').forEach(c=>c.classList.remove('selected'));card.classList.add('selected');state.subject=card.dataset.subject})});DOM.levelGrid.querySelectorAll('.level-btn').forEach(btn=>{btn.addEventListener('click',()=>{DOM.levelGrid.querySelectorAll('.level-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');state.level=btn.dataset.level})})}
-async function askGemini(prompt){const key=localStorage.getItem('gemini_key');if(!key)throw new Error('لم تقم بإدخال مفتاح API');const systemPrompt=`أنت معلم متخصص في ${state.subject}، المستوى التعليمي: ${state.level}. كن واضحاً وشاملاً وسهل الفهم. استخدم الأمثلة والرسوم التوضيحية إن أمكن.`;const fullPrompt=systemPrompt+'\n\nسؤال الطالب: '+prompt;for(const model of CONFIG.MODELS){for(const version of CONFIG.VERSIONS){const url=`${CONFIG.API_URL}/${version}/models/${model}:generateContent?key=${key}`;try{const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:fullPrompt}]}]})});const data=await res.json();if(data?.candidates?.[0]?.content?.parts?.[0]?.text){localStorage.setItem('working_model',model);localStorage.setItem('working_version',version);return data.candidates[0].content.parts[0].text.trim()}}catch(e){console.log('محاولة نموذج بديل...')}}}throw new Error(t('error'))}
-async function sendMessage(){const text=DOM.msgInput.value.trim();if(!text||state.waiting)return;addMessage(text,'user',new Date().toLocaleTimeString('ar'));DOM.msgInput.value='';const waitingNode=addMessage(t('thinking'),'ai');state.waiting=true;DOM.sendBtn.disabled=true;setStatus(t('thinking'));try{const answer=await askGemini(text);waitingNode.textContent=answer;waitingNode.className='msg ai';state.messages.push({q:text,a:answer})}catch(e){waitingNode.textContent=e.message}finally{state.waiting=false;DOM.sendBtn.disabled=false;setStatus(t('ready'))}}
+
+async function saveSettings(){
+const key=DOM.apiKeyInput.value.trim();
+if(!key||key.length<10){DOM.apiError.style.display='block';DOM.apiError.textContent=t('keyShort');return}
+DOM.apiError.style.display='none';
+localStorage.setItem('moallem_api_key',key);
+localStorage.setItem('moallem_search_key',DOM.searchKeyInput.value);
+localStorage.setItem('moallem_search_engine',DOM.searchEngineInput.value);
+localStorage.setItem('moallem_lang',DOM.langSelect.value);
+localStorage.setItem('moallem_model',DOM.modelSelect.value);
+localStorage.setItem('moallem_auto_search',DOM.autoSearchToggle.checked);
+state.lang=DOM.langSelect.value;
+renderLanguage();
+hideModal();
+setStatus(t('saved'),'success');
+setTimeout(()=>setStatus(t('ready'),''),2000);
+}
+
+function initSetup(){
+DOM.subjectGrid.querySelectorAll('.subject-card').forEach(card=>{
+card.addEventListener('click',()=>{
+DOM.subjectGrid.querySelectorAll('.subject-card').forEach(c=>c.classList.remove('selected'));
+card.classList.add('selected');
+state.subject=card.dataset.subject;
+saveSettings();
+});
+});
+DOM.levelGrid.querySelectorAll('.level-btn').forEach(btn=>{
+btn.addEventListener('click',()=>{
+DOM.levelGrid.querySelectorAll('.level-btn').forEach(b=>b.classList.remove('selected'));
+btn.classList.add('selected');
+state.level=btn.dataset.level;
+saveSettings();
+});
+});
+}
+
+function renderLanguage(){
+document.documentElement.lang=state.lang;
+document.body.className=state.lang==='en'?'ltr':'';
+DOM.msgInput.placeholder=state.lang==='ar'?'اسأل عن أي شيء...':'Ask about anything...';
+DOM.sendBtn.textContent=state.lang==='ar'?'إرسال':'Send';
+}
+
+function loadSettings(){
+DOM.apiKeyInput.value=localStorage.getItem('moallem_api_key')||'';
+DOM.searchKeyInput.value=localStorage.getItem('moallem_search_key')||'';
+DOM.searchEngineInput.value=localStorage.getItem('moallem_search_engine')||'';
+DOM.langSelect.value=state.lang;
+DOM.modelSelect.value=localStorage.getItem('moallem_model')||'';
+DOM.autoSearchToggle.checked=(localStorage.getItem('moallem_auto_search')||'true')==='true';
+}
+
+async function searchInternet(query){
+const key=localStorage.getItem('moallem_search_key');
+const engine=localStorage.getItem('moallem_search_engine');
+if(!key||!engine)return null;
+try{
+const url=`${CONFIG.SEARCH_API}?q=${encodeURIComponent(query)}&key=${key}&cx=${engine}&num=3`;
+const res=await fetch(url);
+const data=await res.json();
+return data.items?data.items.map(i=>i.snippet).join(' '):null;
+}catch(e){
+console.log('بحث فشل');return null;
+}
+}
+
+async function askGemini(prompt){
+const key=localStorage.getItem('moallem_api_key');
+if(!key)throw new Error(t('noKey'));
+const systemPrompt=`أنت معلم متخصص في ${state.subject||'العلوم'}، المستوى: ${state.level||'عام'}. كن واضحاً وسهل الفهم.`;
+let searchResults='';
+if(DOM.autoSearchToggle.checked){
+setStatus(t('searching'),'');
+const results=await searchInternet(prompt);
+if(results)searchResults=`\n\nنتائج البحث: ${results}`;
+}
+const fullPrompt=systemPrompt+'\n\nسؤال: '+prompt+searchResults;
+for(const model of CONFIG.MODELS){
+for(const version of CONFIG.VERSIONS){
+const url=`${CONFIG.API_URL}/${version}/models/${model}:generateContent?key=${key}`;
+try{
+const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:fullPrompt}]}]})});
+const data=await res.json();
+if(data?.candidates?.[0]?.content?.parts?.[0]?.text){
+return data.candidates[0].content.parts[0].text.trim();
+}
+}catch(e){console.log('محاولة نموذج بديل');}
+}
+}
+throw new Error(t('error'));
+}
+
+async function sendMessage(){
+const text=DOM.msgInput.value.trim();
+if(!text||state.waiting)return;
+addMessage(text,'user',new Date().toLocaleTimeString(state.lang));
+DOM.msgInput.value='';
+const waitingNode=addMessage(t('thinking'),'ai');
+state.waiting=true;
+DOM.sendBtn.disabled=true;
+setStatus(t('thinking'),'');
+try{
+const answer=await askGemini(text);
+waitingNode.textContent=answer;
+waitingNode.className='msg ai';
+await db.save({subject:state.subject,level:state.level,question:text,answer:answer,language:state.lang});
+state.messages.push({q:text,a:answer});
+}catch(e){
+waitingNode.textContent=e.message;
+waitingNode.className='msg ai error';
+}finally{
+state.waiting=false;
+DOM.sendBtn.disabled=false;
+setStatus(t('ready'),'');
+}
+}
+
+async function exportHistory(){
+const data=await db.getAll();
+const json=JSON.stringify(data,null,2);
+const blob=new Blob([json],{type:'application/json'});
+const url=URL.createObjectURL(blob);
+const a=document.createElement('a');
+a.href=url;
+a.download=`moallem_export_${Date.now()}.json`;
+a.click();
+}
+
+async function clearHistory(){
+if(!confirm('هل أنت متأكد؟'))return;
+await db.clear();
+state.messages=[];
+DOM.chat.innerHTML='';
+}
+
+// الأحداث
 DOM.sendBtn.addEventListener('click',sendMessage);
 DOM.msgInput.addEventListener('keydown',e=>{if(e.key==='Enter')sendMessage()});
-DOM.settingsBtn.addEventListener('click',()=>showModal('settings'));
+DOM.settingsBtn.addEventListener('click',()=>showModal('setup'));
+DOM.historyBtn.addEventListener('click',()=>showModal('api'));
 DOM.saveBtn.addEventListener('click',saveSettings);
 DOM.cancelBtn.addEventListener('click',hideModal);
 DOM.modalClose.addEventListener('click',hideModal);
-DOM.quickActions.querySelectorAll('.action-btn').forEach(btn=>{btn.addEventListener('click',()=>{const action=btn.dataset.action;const prompts={explain:t('explain'),summarize:t('summarize'),test:t('test'),examples:t('examples'),translate:t('translate')};DOM.msgInput.value=prompts[action];DOM.msgInput.focus()})});
+DOM.exportBtn.addEventListener('click',exportHistory);
+DOM.clearHistoryBtn.addEventListener('click',clearHistory);
 
-state.lang=localStorage.getItem('lang')||'ar';
-document.documentElement.lang=state.lang;
+document.querySelectorAll('.tabs .tab').forEach(tab=>{
+tab.addEventListener('click',()=>{
+document.querySelectorAll('.tabs .tab').forEach(t=>t.classList.remove('active'));
+tab.classList.add('active');
+const tabName=tab.dataset.tab;
+document.getElementById('setupTab').style.display=tabName==='setup'?'block':'none';
+document.getElementById('apiTab').style.display=tabName==='api'?'block':'none';
+document.getElementById('settingsTab').style.display=tabName==='settings'?'block':'none';
+});
+});
+
+DOM.quickActions.querySelectorAll('.action-btn').forEach(btn=>{
+btn.addEventListener('click',()=>{
+const action=btn.dataset.action;
+const prompts={
+explain:t('explain'),
+summarize:t('summarize'),
+test:t('test'),
+examples:t('examples'),
+translate:t('translate')
+};
+DOM.msgInput.value=prompts[action];
+DOM.msgInput.focus();
+});
+});
+
+DB_NAME='AlMoallem';
+STORE_NAME='conversations';
+db.init().then(()=>{
+state.lang=localStorage.getItem('moallem_lang')||'ar';
+renderLanguage();
+loadSettings();
 initSetup();
-
-if(!localStorage.getItem('gemini_key')){
-showModal('setup');
-}else{
-DOM.setupStep.style.display='none';
-}
+addMessage(state.lang==='ar'?'أهلا بك في المعلم الذكي!':'Welcome to Al-Moallem!','system');
+});
 </script>
 </body>
 </html>
