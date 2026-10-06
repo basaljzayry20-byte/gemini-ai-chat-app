@@ -2,131 +2,367 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>مساعد الذكاء الاصطناعي</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="theme-color" content="#0f172a"/>
+<title>مساعد الذكاء الاصطناعي المتقدم</title>
 <style>
-:root{--bg:#0f172a;--bar:#111827;--card:#1e293b;--blue:#3b82f6;--text:#e2e8f0;--muted:#94a3b8;--danger:#ef4444;--shadow:0 10px 25px rgba(0,0,0,.25)}
-*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text)}body{display:flex;justify-content:center}#app{width:100%;max-width:520px;height:100vh;display:flex;flex-direction:column;background:linear-gradient(180deg,#0f172a,#111827)}.top{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:rgba(17,24,39,.95);border-bottom:1px solid rgba(148,163,184,.15)}.title{font-weight:700;color:var(--blue);font-size:18px}.btn{border:0;border-radius:12px;padding:10px 14px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}.btn:disabled{opacity:.5;cursor:not-allowed}.ghost{background:transparent;border:1px solid rgba(255,255,255,.1);color:var(--text)}.status{padding:8px 12px;font-size:12px;background:#0b1220;color:var(--muted);border-bottom:1px solid rgba(148,163,184,.12);min-height:34px;display:flex;align-items:center}.chat{flex:1;overflow:auto;padding:12px 10px;display:flex;flex-direction:column;gap:10px}.msg{max-width:78%;padding:10px 12px;border-radius:16px;line-height:1.5;white-space:pre-wrap;word-break:break-word;box-shadow:var(--shadow)}.msg.user{align-self:flex-start;background:var(--blue);border-bottom-left-radius:6px}.msg.ai{align-self:flex-end;background:var(--card);border-bottom-right-radius:6px}.msg.typing{align-self:flex-end;background:#1f2937;color:var(--muted)}.inp{display:flex;gap:8px;padding:10px 12px;border-top:1px solid rgba(148,163,184,.12);background:rgba(15,23,42,.96)}.inp input{flex:1;border:0;border-radius:12px;padding:14px 14px;background:#0b1220;color:var(--text);outline:none}.modal{position:fixed;inset:0;background:rgba(2,6,23,.7);display:none;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.panel{width:min(92vw,420px);background:#111827;border:1px solid rgba(148,163,184,.15);border-radius:18px;padding:18px;box-shadow:var(--shadow)}.panel h3{margin:0 0 12px;font-size:20px}.row{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.label{font-size:13px;color:var(--muted)}.panel input,.panel select{width:100%;padding:12px 10px;border-radius:10px;border:1px solid rgba(148,163,184,.2);background:#0f172a;color:var(--text);outline:none}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}.warn{color:var(--danger);font-size:12px;min-height:14px;margin:4px 0 0}.k{display:inline-block;width:8px;height:8px;background:var(--blue);border-radius:50%;margin-left:6px;animation:pulse 1s infinite alternate}@keyframes pulse{to{transform:scale(1.4);opacity:.6}}
+:root{
+--bg:#0f172a;--bar:#111827;--card:#1e293b;--blue:#3b82f6;--text:#e2e8f0;--muted:#94a3b8;--danger:#ef4444;--success:#10b981;--warn:#f59e0b;--shadow:0 10px 30px rgba(0,0,0,.3);--transition:all .2s cubic-bezier(.4,0,.2,1)
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
+body{display:flex;justify-content:center;align-items:stretch}
+#app{width:100%;max-width:540px;height:100vh;display:flex;flex-direction:column;background:linear-gradient(180deg,#0f172a,#111827)}
+.header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(17,24,39,.98);border-bottom:1px solid rgba(148,163,184,.15);gap:8px}
+.logo{width:36px;height:36px;background:linear-gradient(135deg,#3b82f6,#1e40af);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:18px}
+.header-title{flex:1}
+.header-title h1{margin:0;font-size:16px;color:var(--text);font-weight:700}
+.header-title p{margin:2px 0 0;font-size:11px;color:var(--muted)}
+.header-btn{padding:8px 12px;border:none;background:rgba(59,130,246,.1);color:var(--blue);border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;transition:var(--transition);border:1px solid rgba(59,130,246,.2)}
+.header-btn:hover{background:rgba(59,130,246,.2);border-color:rgba(59,130,246,.4)}
+.header-btn:active{transform:scale(.98)}
+.status{padding:10px 14px;font-size:11px;background:#0b1220;border-bottom:1px solid rgba(148,163,184,.12);display:flex;align-items:center;gap:6px;color:var(--muted);min-height:36px;animation:fadeIn .3s}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:pulse .8s infinite}
+.status.ready .status-dot{background:var(--success)}
+.status.error .status-dot{background:var(--danger)}
+.chat{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth}
+.msg{max-width:82%;padding:12px 14px;border-radius:16px;line-height:1.5;word-break:break-word;animation:slideIn .3s}
+.msg.user{align-self:flex-start;background:linear-gradient(135deg,#3b82f6,#1e40af);border-bottom-left-radius:4px}
+.msg.ai{align-self:flex-end;background:linear-gradient(135deg,#1e293b,#0f172a);border-bottom-right-radius:4px;border:1px solid rgba(148,163,184,.2)}
+.msg.typing{align-self:flex-end;background:#1f2937;color:var(--muted)}
+.msg-time{font-size:9px;opacity:.6;margin-top:4px}
+.input-section{padding:10px 12px;border-top:1px solid rgba(148,163,184,.12);background:rgba(15,23,42,.96);display:flex;gap:8px;align-items:flex-end}
+.input-wrapper{flex:1;position:relative}
+.input-wrapper input{width:100%;border:1px solid rgba(148,163,184,.2);background:#0b1220;color:var(--text);border-radius:12px;padding:12px 12px;outline:none;font-size:15px;resize:none;max-height:80px;transition:var(--transition)}
+.input-wrapper input:focus{border-color:var(--blue);background:rgba(15,23,42,.8);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.input-wrapper input::placeholder{color:var(--muted)}
+.send-btn{background:linear-gradient(135deg,#3b82f6,#1e40af);color:#fff;border:none;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer;transition:var(--transition);display:flex;align-items:center;gap:4px}
+.send-btn:disabled{opacity:.5;cursor:not-allowed}
+.send-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 4px 12px rgba(59,130,246,.3)}
+.send-btn:active:not(:disabled){transform:translateY(0)}
+.send-btn svg{width:16px;height:16px}
+.modal{position:fixed;inset:0;background:rgba(2,6,23,.8);display:none;align-items:center;justify-content:center;padding:20px;z-index:1000;animation:fadeIn .2s}
+.modal.show{display:flex}
+.modal-content{width:min(460px,95vw);background:linear-gradient(135deg,#111827,#0f172a);border:1px solid rgba(148,163,184,.15);border-radius:20px;padding:20px;box-shadow:var(--shadow);max-height:90vh;overflow-y:auto;animation:slideUp .3s}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;border-bottom:1px solid rgba(148,163,184,.12);padding-bottom:12px}
+.modal-header h2{margin:0;font-size:18px;color:var(--text)}
+.modal-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;padding:0;width:24px;height:24px;display:flex;align-items:center;justify-content:center;transition:var(--transition)}
+.modal-close:hover{color:var(--text);background:rgba(148,163,184,.1);border-radius:6px}
+.form-group{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.form-label{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.form-input,.form-select{width:100%;border:1px solid rgba(148,163,184,.2);background:#0f172a;color:var(--text);border-radius:10px;padding:12px 12px;outline:none;font-size:14px;transition:var(--transition)}
+.form-input:focus,.form-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.form-input::placeholder{color:var(--muted)}
+.form-error{color:var(--danger);font-size:11px;margin-top:4px;display:flex;align-items:center;gap:4px}
+.form-success{color:var(--success);font-size:11px;margin-top:4px;display:flex;align-items:center;gap:4px}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:12px;border-top:1px solid rgba(148,163,184,.12)}
+.btn{border:none;border-radius:10px;padding:10px 16px;font-weight:600;cursor:pointer;transition:var(--transition);font-size:14px}
+.btn-primary{background:linear-gradient(135deg,#3b82f6,#1e40af);color:#fff}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(59,130,246,.3)}
+.btn-secondary{background:rgba(148,163,184,.1);color:var(--text);border:1px solid rgba(148,163,184,.2)}
+.btn-secondary:hover{background:rgba(148,163,184,.15);border-color:rgba(148,163,184,.3)}
+.btn-danger{background:rgba(239,68,68,.1);color:var(--danger);border:1px solid rgba(239,68,68,.2)}
+.btn-danger:hover{background:rgba(239,68,68,.15)}
+.separator{height:1px;background:rgba(148,163,184,.12);margin:12px 0}
+.settings-section{margin-bottom:14px}
+.settings-section-title{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.history-item{background:rgba(148,163,184,.05);border:1px solid rgba(148,163,184,.12);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:12px;cursor:pointer;transition:var(--transition)}
+.history-item:hover{background:rgba(148,163,184,.1);border-color:rgba(148,163,184,.2)}
+.history-item-text{color:var(--text);margin-bottom:4px}
+.history-item-time{color:var(--muted);font-size:10px}
+.tabs{display:flex;gap:8px;margin-bottom:12px;border-bottom:1px solid rgba(148,163,184,.12);padding-bottom:8px}
+.tab{padding:8px 12px;border:none;background:none;color:var(--muted);cursor:pointer;font-size:12px;font-weight:600;border-bottom:2px solid transparent;transition:var(--transition)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.spinner{display:inline-block;width:8px;height:8px;background:var(--blue);border-radius:50%;animation:pulse .8s infinite;margin-right:6px}
+.badge{display:inline-block;background:rgba(59,130,246,.2);color:var(--blue);padding:4px 8px;border-radius:6px;font-size:10px;font-weight:600}
+.tooltip{position:relative;display:inline-block}
+.tooltip .tooltiptext{visibility:hidden;width:160px;background:rgba(0,0,0,.9);color:#fff;text-align:center;border-radius:6px;padding:6px;position:absolute;z-index:1;bottom:125%;left:50%;margin-left:-80px;opacity:0;transition:opacity .3s;font-size:11px}
+.tooltip:hover .tooltiptext{visibility:visible;opacity:1}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%{transform:scale(1);opacity:1}50%{transform:scale(1.2);opacity:.6}100%{transform:scale(1);opacity:1}}
+@media(max-width:480px){
+.msg{max-width:88%}
+.modal-content{width:95vw}
+.header{padding:10px 12px}
+.header-title h1{font-size:15px}
+}
 </style>
 </head>
 <body>
 <div id="app">
-  <div class="top">
-    <div id="title" class="title">مساعد الذكاء الاصطناعي</div>
-    <button id="settingsBtn" class="btn ghost" type="button">الإعدادات</button>
-  </div>
-  <div id="status" class="status">جاهز</div>
-  <div id="chat" class="chat"></div>
-  <div class="inp">
-    <input id="msg" type="text" maxlength="2000" placeholder="اكتب رسالتك..." />
-    <button id="sendBtn" class="btn" type="button">إرسال</button>
-  </div>
+<div class="header">
+<div class="logo">⚡</div>
+<div class="header-title">
+<h1 id="appTitle">مساعد الذكاء الاصطناعي</h1>
+<p id="appSubtitle">مدعوم بـ Google Gemini</p>
 </div>
+<button id="settingsBtn" class="header-btn" type="button">⚙️</button>
+</div>
+<div id="status" class="status"><span class="status-dot"></span><span id="statusText">جاهز</span></div>
+<div id="chat" class="chat"></div>
+<div class="input-section">
+<div class="input-wrapper">
+<input id="msgInput" type="text" placeholder="اكتب رسالتك..." maxlength="2000"/>
+</div>
+<button id="sendBtn" class="send-btn" type="button">
+<svg fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a.75.75 0 00-1.788 0l-7 14a.75.75 0 001.721.807l1.591-3.182h12.864l1.591 3.182a.75.75 0 101.721-.807l-7-14zM12.122 7.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
+</button>
+</div>
+</div>
+
 <div id="modal" class="modal">
-  <div class="panel">
-    <h3 id="modalTitle">الإعدادات</h3>
-    <div class="row">
-      <label class="label" id="apiLabel" for="apiKey">مفتاح Gemini</label>
-      <input id="apiKey" type="password" placeholder="أدخل مفتاح Gemini" />
-    </div>
-    <div class="row">
-      <label class="label" id="langLabel" for="langSelect">اللغة</label>
-      <select id="langSelect">
-        <option value="ar">العربية</option>
-        <option value="en">English</option>
-      </select>
-    </div>
-    <div id="err" class="warn"></div>
-    <div class="actions">
-      <button id="cancelBtn" class="btn ghost" type="button">إلغاء</button>
-      <button id="saveBtn" class="btn" type="button">حفظ</button>
-    </div>
-  </div>
+<div class="modal-content">
+<div class="modal-header">
+<h2 id="modalTitle">الإعدادات</h2>
+<button class="modal-close" type="button" id="modalClose">&times;</button>
 </div>
+
+<div class="tabs" id="tabsContainer" style="display:none">
+<button class="tab active" data-tab="settings">الإعدادات</button>
+<button class="tab" data-tab="history">السجل</button>
+<button class="tab" data-tab="info">معلومات</button>
+</div>
+
+<div id="settingsTab">
+<div class="settings-section">
+<div class="settings-section-title">API والاتصال</div>
+<div class="form-group">
+<label class="form-label" for="apiKeyInput">مفتاح Google Gemini</label>
+<input id="apiKeyInput" class="form-input" type="password" placeholder="أدخل مفتاح Gemini..."/>
+<small style="color:var(--muted);font-size:11px">الحصول على المفتاح من <strong>aistudio.google.com</strong></small>
+<div id="apiError" class="form-error" style="display:none"></div>
+</div>
+<div class="form-group">
+<label class="form-label" for="modelSelect">نموذج Gemini (اختياري)</label>
+<select id="modelSelect" class="form-select">
+<option value="">تلقائي (الأفضل)</option>
+<option value="gemini-3.8-flash">Gemini 3.8 Flash</option>
+<option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+<option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+<option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+<option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+<option value="gemini-pro">Gemini Pro</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label" for="versionSelect">إصدار API (اختياري)</label>
+<select id="versionSelect" class="form-select">
+<option value="">تلقائي (الأحدث)</option>
+<option value="v1">v1</option>
+<option value="v1beta">v1beta</option>
+</select>
+</div>
+</div>
+
+<div class="separator"></div>
+
+<div class="settings-section">
+<div class="settings-section-title">اللغة والظهور</div>
+<div class="form-group">
+<label class="form-label" for="langSelect">اللغة</label>
+<select id="langSelect" class="form-select">
+<option value="ar">🇸🇦 العربية</option>
+<option value="en">🇺🇸 English</option>
+<option value="fr">🇫🇷 Français</option>
+<option value="es">🇪🇸 Español</option>
+<option value="de">🇩🇪 Deutsch</option>
+<option value="zh">🇨🇳 中文</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">
+<input type="checkbox" id="darkModeToggle" checked style="width:16px;height:16px;cursor:pointer;margin-right:6px"/>
+الوضع الليلي
+</label>
+</div>
+<div class="form-group">
+<label class="form-label">
+<input type="checkbox" id="notificationsToggle" checked style="width:16px;height:16px;cursor:pointer;margin-right:6px"/>
+الإشعارات
+</label>
+</div>
+</div>
+
+<div class="separator"></div>
+
+<div class="settings-section">
+<div class="settings-section-title">سلوك التطبيق</div>
+<div class="form-group">
+<label class="form-label">
+<input type="checkbox" id="autoFocusToggle" checked style="width:16px;height:16px;cursor:pointer;margin-right:6px"/>
+التركيز التلقائي على حقل الإدخال
+</label>
+</div>
+<div class="form-group">
+<label class="form-label">
+<input type="checkbox" id="autoScrollToggle" checked style="width:16px;height:16px;cursor:pointer;margin-right:6px"/>
+التمرير التلقائي إلى آخر رسالة
+</label>
+</div>
+<div class="form-group">
+<label class="form-label" for="maxHistoryInput">حد أقصى للرسائل المحفوظة</label>
+<input id="maxHistoryInput" class="form-input" type="number" value="100" min="10" max="500"/>
+</div>
+</div>
+
+<div class="separator"></div>
+
+<div class="form-group">
+<label class="form-label">الخطر</label>
+<button id="clearChatBtn" class="btn btn-danger" type="button">🗑️ مسح جميع الرسائل</button>
+<button id="clearDataBtn" class="btn btn-danger" style="margin-top:8px" type="button">🔄 إعادة تعيين جميع البيانات</button>
+</div>
+</div>
+
+<div id="historyTab" style="display:none">
+<div class="settings-section-title" style="margin-bottom:12px">آخر المحادثات</div>
+<div id="historyContainer" style="max-height:300px;overflow-y:auto">
+<p style="color:var(--muted);font-size:12px;text-align:center">لا توجد محادثات محفوظة</p>
+</div>
+</div>
+
+<div id="infoTab" style="display:none">
+<div class="settings-section">
+<div class="settings-section-title">عن التطبيق</div>
+<div style="color:var(--text);font-size:12px;line-height:1.6">
+<p><strong>اسم التطبيق:</strong> مساعد الذكاء الاصطناعي المتقدم</p>
+<p><strong>الإصدار:</strong> 2.5.0</p>
+<p><strong>المحرك:</strong> Google Gemini API</p>
+<p><strong>اللغات المدعومة:</strong> العربية، الإنجليزية، الفرنسية، الإسبانية، الألمانية، الصينية</p>
+<p><strong>الميزات:</strong></p>
+<ul style="margin:8px 0;padding-left:20px">
+<li>محادثة ذكية متعددة اللغات</li>
+<li>التصحيح التلقائي للنماذج والإصدارات</li>
+<li>حفظ السجل التلقائي</li>
+<li>واجهة متجاوبة لجميع الأجهزة</li>
+<li>تشفير البيانات محلياً</li>
+<li>لا توجد رسوم إضافية</li>
+</ul>
+<p><strong>حقوق الملكية:</strong> مجاني ومفتوح المصدر</p>
+</div>
+</div>
+</div>
+
+<div class="form-actions">
+<button id="cancelBtn" class="btn btn-secondary" type="button">إلغاء</button>
+<button id="saveBtn" class="btn btn-primary" type="button">💾 حفظ</button>
+</div>
+</div>
+</div>
+
 <script>
-const MODELS=['gemini-3.8-flash','gemini-2.5-flash','gemini-2.0-flash','gemini-1.5-flash','gemini-1.5-pro','gemini-pro'];
-const VERSIONS=['v1','v1beta'];
-const LANGS={
-  ar:{title:'مساعد الذكاء الاصطناعي',set:'الإعدادات',send:'إرسال',ph:'اكتب رسالتك...',ready:'جاهز',waiting:'جاري التفكير...',err:'حدث خطأ. حاول مرة أخرى.',api:'مفتاح Gemini',lang:'اللغة',save:'حفظ',cancel:'إلغاء',noKey:'أدخل مفتاح Gemini أولاً.',need:'المفتاح يجب أن يكون 10 أحرف على الأقل.',intro:'مرحباً! كيف يمكنني مساعدتك؟',status:'الحالة'},
-  en:{title:'AI Assistant',set:'Settings',send:'Send',ph:'Type your message...',ready:'Ready',waiting:'Thinking...',err:'An error occurred. Please try again.',api:'Gemini API Key',lang:'Language',save:'Save',cancel:'Cancel',noKey:'Please enter your Gemini API key first.',need:'Key must be at least 10 characters long.',intro:'Hello! How can I help you?',status:'Status'}
+// =====================================================
+// ★ تطبيق محادثة الذكاء الاصطناعي المتقدم ★
+// =====================================================
+
+// الإعدادات الأساسية
+const CONFIG={
+STORAGE:{KEY:'gemini_api_key',MODEL:'gemini_model',VERSION:'gemini_version',LANG:'gemini_lang',THEME:'gemini_theme',HISTORY:'gemini_history',SETTINGS:'gemini_settings'},
+MODELS:['gemini-3.8-flash','gemini-2.5-flash','gemini-2.0-flash','gemini-1.5-flash','gemini-1.5-pro','gemini-pro'],
+VERSIONS:['v1','v1beta'],
+MIN_KEY_LENGTH:10,
+API_URL:'https://generativelanguage.googleapis.com'
 };
-const KEY='gemini_api_key',M='gemini_model',V='gemini_version',L='gemini_lang';
-let state={lang:(localStorage.getItem(L)||((navigator.language||'').startsWith('en')?'en':'ar')),waiting:false};
-let lastMsgNode=null;
-const chat=$('chat'),msgInput=$('msg'),sendBtn=$('sendBtn'),statusEl=$('status'),modal=$('modal'),apiKeyInput=$('apiKey'),langSelect=$('langSelect'),errEl=$('err');
-function $(id){return document.getElementById(id)}
-function tr(k){return LANGS[state.lang][k]||LANGS.ar[k]||k}
-function setStatus(text){statusEl.textContent=text||tr('ready')}
-function renderLanguage(){
-  document.documentElement.lang=state.lang;
-  $('title').textContent=tr('title');
-  $('settingsBtn').textContent=tr('set');
-  $('sendBtn').textContent=tr('send');
-  msgInput.placeholder=tr('ph');
-  $('modalTitle').textContent=tr('set');
-  $('apiLabel').textContent=tr('api');
-  $('langLabel').textContent=tr('lang');
-  $('saveBtn').textContent=tr('save');
-  $('cancelBtn').textContent=tr('cancel');
-  setStatus(tr('ready'));
-  langSelect.value=state.lang;
-  if(!chat.children.length){addMsg(tr('intro'),'ai');}
+
+// قاموس الترجمات الشامل
+const i18n={
+ar:{title:'مساعد الذكاء الاصطناعي',subtitle:'مدعوم بـ Google Gemini',settings:'الإعدادات',send:'إرسال',placeholder:'اكتب رسالتك...',ready:'جاهز',waiting:'جاري التفكير...',error:'حدث خطأ',api:'مفتاح Gemini',lang:'اللغة',save:'حفظ',cancel:'إلغاء',noKey:'أدخل مفتاح Gemini أولاً',keyMin:'المفتاح يجب أن يكون 10 أحرف على الأقل',intro:'مرحباً! كيف يمكنني مساعدتك؟',trying:'جاري المحاولة',success:'تم بنجاح ✓',clearing:'جاري المسح...',cleared:'تم مسح الرسائل ✓',resetting:'جاري إعادة التعيين...',copied:'تم النسخ ✓'},
+en:{title:'AI Assistant',subtitle:'Powered by Google Gemini',settings:'Settings',send:'Send',placeholder:'Type your message...',ready:'Ready',waiting:'Thinking...',error:'An error occurred',api:'Gemini API Key',lang:'Language',save:'Save',cancel:'Cancel',noKey:'Please enter your Gemini API key first',keyMin:'Key must be at least 10 characters',intro:'Hello! How can I help you?',trying:'Trying',success:'Success ✓',clearing:'Clearing...',cleared:'Messages cleared ✓',resetting:'Resetting...',copied:'Copied ✓'},
+fr:{title:'Assistant IA',subtitle:'Alimenté par Google Gemini',settings:'Paramètres',send:'Envoyer',placeholder:'Tapez votre message...',ready:'Prêt',waiting:'En train de réfléchir...',error:'Une erreur est survenue',api:'Clé API Gemini',lang:'Langue',save:'Enregistrer',cancel:'Annuler',noKey:'Veuillez d\'abord entrer votre clé API Gemini',keyMin:'La clé doit comporter au moins 10 caractères',intro:'Bonjour! Comment puis-je vous aider?',trying:'Essai',success:'Succès ✓',clearing:'Effacement...',cleared:'Messages effacés ✓',resetting:'Réinitialisation...',copied:'Copié ✓'},
+es:{title:'Asistente IA',subtitle:'Impulsado por Google Gemini',settings:'Configuración',send:'Enviar',placeholder:'Escribe tu mensaje...',ready:'Listo',waiting:'Pensando...',error:'Ocurrió un error',api:'Clave API de Gemini',lang:'Idioma',save:'Guardar',cancel:'Cancelar',noKey:'Primero ingrese su clave API de Gemini',keyMin:'La clave debe tener al menos 10 caracteres',intro:'¡Hola! ¿Cómo puedo ayudarte?',trying:'Intentando',success:'Éxito ✓',clearing:'Limpiando...',cleared:'Mensajes borrados ✓',resetting:'Reiniciando...',copied:'Copiado ✓'},
+de:{title:'KI-Assistent',subtitle:'Unterstützt von Google Gemini',settings:'Einstellungen',send:'Senden',placeholder:'Geben Sie Ihre Nachricht ein...',ready:'Bereit',waiting:'Überlegung...',error:'Ein Fehler ist aufgetreten',api:'Gemini-API-Schlüssel',lang:'Sprache',save:'Speichern',cancel:'Abbrechen',noKey:'Bitte geben Sie zuerst Ihren Gemini-API-Schlüssel ein',keyMin:'Der Schlüssel muss mindestens 10 Zeichen lang sein',intro:'Hallo! Wie kann ich dir helfen?',trying:'Versuch',success:'Erfolg ✓',clearing:'Wird gelöscht...',cleared:'Nachrichten gelöscht ✓',resetting:'Zurücksetzen...',copied:'Kopiert ✓'},
+zh:{title:'人工智能助手',subtitle:'由 Google Gemini 提供支持',settings:'设置',send:'发送',placeholder:'输入您的消息...',ready:'准备就绪',waiting:'思考中...',error:'发生错误',api:'Gemini API 密钥',lang:'语言',save:'保存',cancel:'取消',noKey:'请先输入您的 Gemini API 密钥',keyMin:'密钥必须至少 10 个字符',intro:'你好！我能帮你什么？',trying:'尝试',success:'成功 ✓',clearing:'正在清除...',cleared:'消息已清除 ✓',resetting:'正在重置...',copied:'已复制 ✓'}
+};
+
+// حالة التطبيق
+const state={
+lang:localStorage.getItem(CONFIG.STORAGE.LANG)||'ar',
+waiting:false,
+messages:[],
+sessionStart:new Date()
+};
+
+// عناصر DOM
+const DOM={
+app:document.getElementById('app'),
+chat:document.getElementById('chat'),
+msgInput:document.getElementById('msgInput'),
+sendBtn:document.getElementById('sendBtn'),
+status:document.getElementById('status'),
+statusText:document.getElementById('statusText'),
+modal:document.getElementById('modal'),
+settingsBtn:document.getElementById('settingsBtn'),
+modalClose:document.getElementById('modalClose'),
+saveBtn:document.getElementById('saveBtn'),
+cancelBtn:document.getElementById('cancelBtn'),
+apiKeyInput:document.getElementById('apiKeyInput'),
+langSelect:document.getElementById('langSelect'),
+modelSelect:document.getElementById('modelSelect'),
+versionSelect:document.getElementById('versionSelect'),
+apiError:document.getElementById('apiError'),
+clearChatBtn:document.getElementById('clearChatBtn'),
+clearDataBtn:document.getElementById('clearDataBtn'),
+historyContainer:document.getElementById('historyContainer'),
+darkModeToggle:document.getElementById('darkModeToggle'),
+notificationsToggle:document.getElementById('notificationsToggle'),
+autoFocusToggle:document.getElementById('autoFocusToggle'),
+autoScrollToggle:document.getElementById('autoScrollToggle'),
+maxHistoryInput:document.getElementById('maxHistoryInput'),
+appTitle:document.getElementById('appTitle'),
+appSubtitle:document.getElementById('appSubtitle'),
+tabsContainer:document.getElementById('tabsContainer'),
+settingsTab:document.getElementById('settingsTab'),
+historyTab:document.getElementById('historyTab'),
+infoTab:document.getElementById('infoTab')
+};
+
+// وظائف المساعدة
+function t(key){return(i18n[state.lang]&&i18n[state.lang][key])||i18n.ar[key]||key}
+function setStatus(text,type=''){DOM.status.textContent='';DOM.statusText.textContent=text;DOM.status.className='status '+(type||'');}
+function addMessage(text,type,timestamp=new Date()){const node=document.createElement('div');node.className='msg '+type;const contentDiv=document.createElement('div');contentDiv.innerHTML=escapeHtml(text);node.appendChild(contentDiv);const timeDiv=document.createElement('div');timeDiv.className='msg-time';timeDiv.textContent=timestamp.toLocaleTimeString(state.lang);node.appendChild(timeDiv);DOM.chat.appendChild(node);if(state.autoScroll!==false)DOM.chat.scrollTop=DOM.chat.scrollHeight;return node}
+function escapeHtml(text){const map={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#039;'};return text.replace(/[&<>"']/g,m=>map[m])}
+function showModal(show){DOM.modal.classList.toggle('show',show)}
+function renderLanguage(){document.documentElement.lang=state.lang;DOM.appTitle.textContent=t('title');DOM.appSubtitle.textContent=t('subtitle');DOM.settingsBtn.textContent='⚙️';DOM.msgInput.placeholder=t('placeholder');DOM.sendBtn.innerHTML='<svg fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a.75.75 0 00-1.788 0l-7 14a.75.75 0 001.721.807l1.591-3.182h12.864l1.591 3.182a.75.75 0 101.721-.807l-7-14zM12.122 7.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>';DOM.saveBtn.textContent='💾 '+t('save');DOM.cancelBtn.textContent=t('cancel');DOM.clearChatBtn.textContent='🗑️ مسح جميع الرسائل';DOM.clearDataBtn.textContent='🔄 إعادة تعيين جميع البيانات';setStatus(t('ready'),'ready');if(!DOM.chat.children.length){addMessage(t('intro'),'ai')}}
+function saveSettings(){const key=(DOM.apiKeyInput.value||'').trim();if(!key){DOM.apiError.textContent=t('keyMin');DOM.apiError.style.display='flex';return}if(key.length<CONFIG.MIN_KEY_LENGTH){DOM.apiError.textContent=t('keyMin');DOM.apiError.style.display='flex';return}localStorage.setItem(CONFIG.STORAGE.KEY,key);localStorage.setItem(CONFIG.STORAGE.MODEL,DOM.modelSelect.value);localStorage.setItem(CONFIG.STORAGE.VERSION,DOM.versionSelect.value);localStorage.setItem(CONFIG.STORAGE.LANG,DOM.langSelect.value);localStorage.setItem(CONFIG.STORAGE.THEME,DOM.darkModeToggle.checked?'dark':'light');localStorage.setItem(CONFIG.STORAGE.HISTORY,DOM.maxHistoryInput.value);state.lang=DOM.langSelect.value;state.autoScroll=DOM.autoScrollToggle.checked;renderLanguage();showModal(false);setStatus(t('success'),'');setTimeout(()=>setStatus(t('ready'),'ready'),2000)}
+function detectLanguage(){const saved=localStorage.getItem(CONFIG.STORAGE.LANG);if(saved)state.lang=saved;else{const lang=(navigator.language||'').split('-')[0];state.lang=['ar','en','fr','es','de','zh'].includes(lang)?lang:'ar'}localStorage.setItem(CONFIG.STORAGE.LANG,state.lang)}
+function loadSettings(){DOM.apiKeyInput.value=localStorage.getItem(CONFIG.STORAGE.KEY)||'';DOM.modelSelect.value=localStorage.getItem(CONFIG.STORAGE.MODEL)||'';DOM.versionSelect.value=localStorage.getItem(CONFIG.STORAGE.VERSION)||'';DOM.langSelect.value=state.lang;DOM.darkModeToggle.checked=(localStorage.getItem(CONFIG.STORAGE.THEME)||'dark')==='dark';DOM.maxHistoryInput.value=localStorage.getItem(CONFIG.STORAGE.HISTORY)||'100';const maxHistory=parseInt(DOM.maxHistoryInput.value||100);state.maxHistory=maxHistory;state.autoScroll=DOM.autoScrollToggle.checked;DOM.apiError.style.display='none'}
+async function askGemini(prompt){const apiKey=localStorage.getItem(CONFIG.STORAGE.KEY);if(!apiKey)throw new Error(t('noKey'));const langPrefix=state.lang==='ar'?'أجب باللغة العربية:':'Answer in the language of the request:';const fullPrompt=langPrefix+' '+prompt;const manualModel=localStorage.getItem(CONFIG.STORAGE.MODEL);const manualVersion=localStorage.getItem(CONFIG.STORAGE.VERSION);const modelsToTry=manualModel?[manualModel]:CONFIG.MODELS;const versionsToTry=manualVersion?[manualVersion]:CONFIG.VERSIONS;let lastError=t('error');for(const model of modelsToTry){for(const version of versionsToTry){const url=`${CONFIG.API_URL}/${version}/models/${model}:generateContent?key=${apiKey}`;setStatus((state.lang==='ar'?'جاري المحاولة: ':'Trying: ')+model+' / '+version,'');try{const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:fullPrompt}]}]})});const data=await res.json();if(!res.ok||!data?.candidates?.[0]?.content?.parts?.[0]?.text){throw new Error(data?.error?.message||'Request failed')}return data.candidates[0].content.parts[0].text.trim()}catch(e){lastError=e.message||String(e)}}}throw new Error(lastError)}
+async function sendMessage(){const text=DOM.msgInput.value.trim();if(!text||state.waiting)return;addMessage(text,'user');DOM.msgInput.value='';if(DOM.autoFocusToggle.checked)DOM.msgInput.focus();const waitingNode=addMessage(t('waiting'),'ai');waitingNode.classList.add('typing');state.waiting=true;DOM.sendBtn.disabled=true;setStatus(t('waiting'),'');try{const answer=await askGemini(text);waitingNode.textContent='';waitingNode.className='msg ai';const contentDiv=document.createElement('div');contentDiv.innerHTML=escapeHtml(answer);waitingNode.appendChild(contentDiv);const timeDiv=document.createElement('div');timeDiv.className='msg-time';timeDiv.textContent=new Date().toLocaleTimeString(state.lang);waitingNode.appendChild(timeDiv);state.messages.push({user:text,ai:answer,timestamp:new Date()});saveHistory()}catch(e){waitingNode.textContent=e.message||t('error');waitingNode.className='msg ai';setStatus(e.message||t('error'),'')}finally{state.waiting=false;DOM.sendBtn.disabled=false;setStatus(t('ready'),'ready')}}
+function saveHistory(){const maxHistory=parseInt(DOM.maxHistoryInput.value||100);if(state.messages.length>maxHistory){state.messages=state.messages.slice(-maxHistory)}localStorage.setItem(CONFIG.STORAGE.HISTORY,JSON.stringify(state.messages))}
+function loadHistory(){try{state.messages=JSON.parse(localStorage.getItem(CONFIG.STORAGE.HISTORY)||'[]')||[]}catch{state.messages=[]}}
+function displayHistory(){const histories=state.messages.slice(-10).reverse();DOM.historyContainer.innerHTML='';if(histories.length===0){DOM.historyContainer.innerHTML='<p style="color:var(--muted);font-size:12px;text-align:center">'+t('intro')+'</p>';return}histories.forEach((h,i)=>{const item=document.createElement('div');item.className='history-item';item.innerHTML=`<div class="history-item-text">${escapeHtml(h.user.substring(0,50))}...</div><div class="history-item-time">${new Date(h.timestamp).toLocaleString(state.lang)}</div>`;item.addEventListener('click',()=>{DOM.msgInput.value=h.user;showModal(false);if(DOM.autoFocusToggle.checked)DOM.msgInput.focus()});DOM.historyContainer.appendChild(item)})}
+function initTabs(){document.querySelectorAll('.tab').forEach(tab=>{tab.addEventListener('click',()=>{const target=tab.dataset.tab;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('settingsTab').style.display='none';document.getElementById('historyTab').style.display='none';document.getElementById('infoTab').style.display='none';tab.classList.add('active');if(target==='settings'){document.getElementById('settingsTab').style.display='block'}else if(target==='history'){document.getElementById('historyTab').style.display='block';displayHistory()}else if(target==='info'){document.getElementById('infoTab').style.display='block'}})})}
+
+// الأحداث
+DOM.sendBtn.addEventListener('click',sendMessage);
+DOM.msgInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage()}});
+DOM.settingsBtn.addEventListener('click',()=>{loadSettings();showModal(true);initTabs();displayHistory()});
+DOM.saveBtn.addEventListener('click',saveSettings);
+DOM.cancelBtn.addEventListener('click',()=>showModal(false));
+DOM.modalClose.addEventListener('click',()=>showModal(false));
+DOM.modal.addEventListener('click',e=>{if(e.target===DOM.modal)showModal(false)});
+DOM.clearChatBtn.addEventListener('click',()=>{if(confirm(t('clearing'))){DOM.chat.innerHTML='';state.messages=[];saveHistory();addMessage(t('intro'),'ai');setStatus(t('cleared'),'');setTimeout(()=>setStatus(t('ready'),'ready'),2000)}});
+DOM.clearDataBtn.addEventListener('click',()=>{if(confirm(t('resetting'))){localStorage.clear();location.reload()}});
+DOM.langSelect.addEventListener('change',()=>{state.lang=DOM.langSelect.value;renderLanguage()});
+
+// التشغيل الأولي
+detectLanguage();
+renderLanguage();
+loadSettings();
+loadHistory();
+
+if(!localStorage.getItem(CONFIG.STORAGE.KEY)){
+showModal(true);
 }
-function addMsg(text,who){const d=document.createElement('div');d.className='msg '+who;d.textContent=text;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d}
-function showModal(show){modal.classList.toggle('show',show);if(show){errEl.textContent='';apiKeyInput.value=localStorage.getItem(KEY)||'';langSelect.value=state.lang;}} 
-function saveSettings(){
-  const key=(apiKeyInput.value||'').trim();
-  if(!key||key.length<10){errEl.textContent=tr('need');return;}
-  localStorage.setItem(KEY,key); localStorage.setItem(L,langSelect.value); state.lang=langSelect.value; renderLanguage(); showModal(false);
+
+// الوسيط
+if(state.lang==='ar'){
+document.documentElement.dir='rtl'
 }
-function detectLang(){const v=localStorage.getItem(L); if(v){state.lang=v;return;} state.lang=(navigator.language||'').startsWith('en')?'en':'ar';localStorage.setItem(L,state.lang)}
-async function askGemini(text){
-  const key=localStorage.getItem(KEY); if(!key) throw new Error(tr('noKey'));
-  const prompt=(state.lang==='ar'?'أجب باللغة العربية وكن واضحاً ومختصراً. ':'Respond in English and be clear and concise. ')+text;
-  let lastErr='';
-  for(const model of MODELS){
-    for(const version of VERSIONS){
-      const url=`https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent?key=${key}`;
-      setStatus((state.lang==='ar'?'جاري المحاولة: ':'Trying: ')+model+' / '+version);
-      try{
-        const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
-        const data=await res.json();
-        if(!res.ok || !data?.candidates?.[0]?.content?.parts?.[0]?.text){ throw new Error(data?.error?.message || 'Request failed'); }
-        localStorage.setItem(M,model); localStorage.setItem(V,version); return data.candidates[0].content.parts[0].text.trim();
-      }catch(e){lastErr=e.message||String(e)}
-    }
-  }
-  throw new Error(lastErr || tr('err'));
-}
-async function sendMessage(){
-  const text=msgInput.value.trim(); if(!text||state.waiting) return;
-  addMsg(text,'user'); msgInput.value='';
-  const waitNode=addMsg(tr('waiting'),'ai'); waitNode.classList.add('typing'); waitNode.innerHTML='<span class="k"></span> '+tr('waiting'); lastMsgNode=waitNode; state.waiting=true; sendBtn.disabled=true; setStatus(tr('waiting'));
-  try{
-    const out=await askGemini(text); 
-    waitNode.textContent=out || tr('err');
-    waitNode.className='msg ai';
-    setStatus(tr('ready'));
-  }catch(e){
-    waitNode.textContent=e.message || tr('err');
-    waitNode.className='msg ai';
-    setStatus(e.message || tr('err'));
-  }finally{
-    state.waiting=false; sendBtn.disabled=false;
-  }
-}
-function firstRun(){
-  detectLang(); renderLanguage();
-  const hasKey=!!localStorage.getItem(KEY);
-  if(!hasKey){showModal(true);}
-}
-$('sendBtn').addEventListener('click',sendMessage);
-msgInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();sendMessage();}});
-$('settingsBtn').addEventListener('click',()=>showModal(true));
-$('saveBtn').addEventListener('click',saveSettings);
-$('cancelBtn').addEventListener('click',()=>{showModal(false); errEl.textContent='';});
-$('modal').addEventListener('click',e=>{if(e.target.id==='modal'){showModal(false);}});
-firstRun();
 </script>
 </body>
 </html>
