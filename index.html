@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>مساعد الذكاء الاصطناعي</title>
+<style>
+:root{--bg:#0f172a;--bar:#111827;--card:#1e293b;--blue:#3b82f6;--text:#e2e8f0;--muted:#94a3b8;--danger:#ef4444;--shadow:0 10px 25px rgba(0,0,0,.25)}
+*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text)}body{display:flex;justify-content:center}#app{width:100%;max-width:520px;height:100vh;display:flex;flex-direction:column;background:linear-gradient(180deg,#0f172a,#111827)}.top{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:rgba(17,24,39,.95);border-bottom:1px solid rgba(148,163,184,.15)}.title{font-weight:700;color:var(--blue);font-size:18px}.btn{border:0;border-radius:12px;padding:10px 14px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}.btn:disabled{opacity:.5;cursor:not-allowed}.ghost{background:transparent;border:1px solid rgba(255,255,255,.1);color:var(--text)}.status{padding:8px 12px;font-size:12px;background:#0b1220;color:var(--muted);border-bottom:1px solid rgba(148,163,184,.12);min-height:34px;display:flex;align-items:center}.chat{flex:1;overflow:auto;padding:12px 10px;display:flex;flex-direction:column;gap:10px}.msg{max-width:78%;padding:10px 12px;border-radius:16px;line-height:1.5;white-space:pre-wrap;word-break:break-word;box-shadow:var(--shadow)}.msg.user{align-self:flex-start;background:var(--blue);border-bottom-left-radius:6px}.msg.ai{align-self:flex-end;background:var(--card);border-bottom-right-radius:6px}.msg.typing{align-self:flex-end;background:#1f2937;color:var(--muted)}.inp{display:flex;gap:8px;padding:10px 12px;border-top:1px solid rgba(148,163,184,.12);background:rgba(15,23,42,.96)}.inp input{flex:1;border:0;border-radius:12px;padding:14px 14px;background:#0b1220;color:var(--text);outline:none}.modal{position:fixed;inset:0;background:rgba(2,6,23,.7);display:none;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.panel{width:min(92vw,420px);background:#111827;border:1px solid rgba(148,163,184,.15);border-radius:18px;padding:18px;box-shadow:var(--shadow)}.panel h3{margin:0 0 12px;font-size:20px}.row{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.label{font-size:13px;color:var(--muted)}.panel input,.panel select{width:100%;padding:12px 10px;border-radius:10px;border:1px solid rgba(148,163,184,.2);background:#0f172a;color:var(--text);outline:none}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}.warn{color:var(--danger);font-size:12px;min-height:14px;margin:4px 0 0}.k{display:inline-block;width:8px;height:8px;background:var(--blue);border-radius:50%;margin-left:6px;animation:pulse 1s infinite alternate}@keyframes pulse{to{transform:scale(1.4);opacity:.6}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div id="title" class="title">مساعد الذكاء الاصطناعي</div>
+    <button id="settingsBtn" class="btn ghost" type="button">الإعدادات</button>
+  </div>
+  <div id="status" class="status">جاهز</div>
+  <div id="chat" class="chat"></div>
+  <div class="inp">
+    <input id="msg" type="text" maxlength="2000" placeholder="اكتب رسالتك..." />
+    <button id="sendBtn" class="btn" type="button">إرسال</button>
+  </div>
+</div>
+<div id="modal" class="modal">
+  <div class="panel">
+    <h3 id="modalTitle">الإعدادات</h3>
+    <div class="row">
+      <label class="label" id="apiLabel" for="apiKey">مفتاح Gemini</label>
+      <input id="apiKey" type="password" placeholder="أدخل مفتاح Gemini" />
+    </div>
+    <div class="row">
+      <label class="label" id="langLabel" for="langSelect">اللغة</label>
+      <select id="langSelect">
+        <option value="ar">العربية</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+    <div id="err" class="warn"></div>
+    <div class="actions">
+      <button id="cancelBtn" class="btn ghost" type="button">إلغاء</button>
+      <button id="saveBtn" class="btn" type="button">حفظ</button>
+    </div>
+  </div>
+</div>
+<script>
+const MODELS=['gemini-3.8-flash','gemini-2.5-flash','gemini-2.0-flash','gemini-1.5-flash','gemini-1.5-pro','gemini-pro'];
+const VERSIONS=['v1','v1beta'];
+const LANGS={
+  ar:{title:'مساعد الذكاء الاصطناعي',set:'الإعدادات',send:'إرسال',ph:'اكتب رسالتك...',ready:'جاهز',waiting:'جاري التفكير...',err:'حدث خطأ. حاول مرة أخرى.',api:'مفتاح Gemini',lang:'اللغة',save:'حفظ',cancel:'إلغاء',noKey:'أدخل مفتاح Gemini أولاً.',need:'المفتاح يجب أن يكون 10 أحرف على الأقل.',intro:'مرحباً! كيف يمكنني مساعدتك؟',status:'الحالة'},
+  en:{title:'AI Assistant',set:'Settings',send:'Send',ph:'Type your message...',ready:'Ready',waiting:'Thinking...',err:'An error occurred. Please try again.',api:'Gemini API Key',lang:'Language',save:'Save',cancel:'Cancel',noKey:'Please enter your Gemini API key first.',need:'Key must be at least 10 characters long.',intro:'Hello! How can I help you?',status:'Status'}
+};
+const KEY='gemini_api_key',M='gemini_model',V='gemini_version',L='gemini_lang';
+let state={lang:(localStorage.getItem(L)||((navigator.language||'').startsWith('en')?'en':'ar')),waiting:false};
+let lastMsgNode=null;
+const chat=$('chat'),msgInput=$('msg'),sendBtn=$('sendBtn'),statusEl=$('status'),modal=$('modal'),apiKeyInput=$('apiKey'),langSelect=$('langSelect'),errEl=$('err');
+function $(id){return document.getElementById(id)}
+function tr(k){return LANGS[state.lang][k]||LANGS.ar[k]||k}
+function setStatus(text){statusEl.textContent=text||tr('ready')}
+function renderLanguage(){
+  document.documentElement.lang=state.lang;
+  $('title').textContent=tr('title');
+  $('settingsBtn').textContent=tr('set');
+  $('sendBtn').textContent=tr('send');
+  msgInput.placeholder=tr('ph');
+  $('modalTitle').textContent=tr('set');
+  $('apiLabel').textContent=tr('api');
+  $('langLabel').textContent=tr('lang');
+  $('saveBtn').textContent=tr('save');
+  $('cancelBtn').textContent=tr('cancel');
+  setStatus(tr('ready'));
+  langSelect.value=state.lang;
+  if(!chat.children.length){addMsg(tr('intro'),'ai');}
+}
+function addMsg(text,who){const d=document.createElement('div');d.className='msg '+who;d.textContent=text;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d}
+function showModal(show){modal.classList.toggle('show',show);if(show){errEl.textContent='';apiKeyInput.value=localStorage.getItem(KEY)||'';langSelect.value=state.lang;}} 
+function saveSettings(){
+  const key=(apiKeyInput.value||'').trim();
+  if(!key||key.length<10){errEl.textContent=tr('need');return;}
+  localStorage.setItem(KEY,key); localStorage.setItem(L,langSelect.value); state.lang=langSelect.value; renderLanguage(); showModal(false);
+}
+function detectLang(){const v=localStorage.getItem(L); if(v){state.lang=v;return;} state.lang=(navigator.language||'').startsWith('en')?'en':'ar';localStorage.setItem(L,state.lang)}
+async function askGemini(text){
+  const key=localStorage.getItem(KEY); if(!key) throw new Error(tr('noKey'));
+  const prompt=(state.lang==='ar'?'أجب باللغة العربية وكن واضحاً ومختصراً. ':'Respond in English and be clear and concise. ')+text;
+  let lastErr='';
+  for(const model of MODELS){
+    for(const version of VERSIONS){
+      const url=`https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent?key=${key}`;
+      setStatus((state.lang==='ar'?'جاري المحاولة: ':'Trying: ')+model+' / '+version);
+      try{
+        const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+        const data=await res.json();
+        if(!res.ok || !data?.candidates?.[0]?.content?.parts?.[0]?.text){ throw new Error(data?.error?.message || 'Request failed'); }
+        localStorage.setItem(M,model); localStorage.setItem(V,version); return data.candidates[0].content.parts[0].text.trim();
+      }catch(e){lastErr=e.message||String(e)}
+    }
+  }
+  throw new Error(lastErr || tr('err'));
+}
+async function sendMessage(){
+  const text=msgInput.value.trim(); if(!text||state.waiting) return;
+  addMsg(text,'user'); msgInput.value='';
+  const waitNode=addMsg(tr('waiting'),'ai'); waitNode.classList.add('typing'); waitNode.innerHTML='<span class="k"></span> '+tr('waiting'); lastMsgNode=waitNode; state.waiting=true; sendBtn.disabled=true; setStatus(tr('waiting'));
+  try{
+    const out=await askGemini(text); 
+    waitNode.textContent=out || tr('err');
+    waitNode.className='msg ai';
+    setStatus(tr('ready'));
+  }catch(e){
+    waitNode.textContent=e.message || tr('err');
+    waitNode.className='msg ai';
+    setStatus(e.message || tr('err'));
+  }finally{
+    state.waiting=false; sendBtn.disabled=false;
+  }
+}
+function firstRun(){
+  detectLang(); renderLanguage();
+  const hasKey=!!localStorage.getItem(KEY);
+  if(!hasKey){showModal(true);}
+}
+$('sendBtn').addEventListener('click',sendMessage);
+msgInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();sendMessage();}});
+$('settingsBtn').addEventListener('click',()=>showModal(true));
+$('saveBtn').addEventListener('click',saveSettings);
+$('cancelBtn').addEventListener('click',()=>{showModal(false); errEl.textContent='';});
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal'){showModal(false);}});
+firstRun();
+</script>
+</body>
+</html>
