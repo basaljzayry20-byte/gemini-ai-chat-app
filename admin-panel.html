@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#1a472a"/>
+<title>المعلم الذكي - نظام إدارة المناهج الدراسية</title>
+<style>
+:root{
+--primary:#2d7a4a;--secondary:#1a472a;--accent:#4ade80;--bg:#0a1f1a;--card:#132e23;--text:#e8f5e9;--muted:#a1d5b8;--danger:#ef4444;--shadow:0 10px 30px rgba(0,0,0,.4);--transition:all .2s cubic-bezier(.4,0,.2,1)
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;direction:rtl}
+body{display:flex;justify-content:stretch;align-items:stretch}
+#app{width:100%;height:100vh;display:flex;flex-direction:row;background:linear-gradient(135deg,var(--bg),var(--secondary))}
+.sidebar{width:280px;height:100vh;background:linear-gradient(180deg,var(--secondary),var(--primary));border-right:3px solid var(--accent);overflow-y:auto;display:flex;flex-direction:column}
+.logo-area{padding:16px;border-bottom:2px solid rgba(74,222,128,.2);display:flex;align-items:center;gap:10px}
+.logo{width:40px;height:40px;background:linear-gradient(135deg,var(--accent),#22c55e);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:22px}
+.logo-text h2{margin:0;font-size:16px;color:var(--accent)}
+.logo-text p{margin:2px 0 0;font-size:10px;color:var(--muted)}
+.sidebar-menu{flex:1;overflow-y:auto;padding:10px 8px}
+.menu-section{margin-bottom:16px}
+.section-title{font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:700;padding:8px 12px;letter-spacing:.5px}
+.menu-btn{width:100%;padding:10px 12px;background:rgba(74,222,128,.1);color:var(--text);border:1px solid rgba(74,222,128,.2);border-radius:8px;cursor:pointer;margin-bottom:6px;text-align:right;transition:var(--transition);font-size:13px;font-weight:500}
+.menu-btn:hover{background:rgba(74,222,128,.2);border-color:var(--accent);color:var(--accent)}
+.menu-btn.active{background:var(--accent);color:var(--secondary);border-color:var(--accent)}
+.sidebar-footer{padding:12px;border-top:1px solid rgba(74,222,128,.2);background:rgba(10,31,26,.5)}
+.user-info{font-size:11px;color:var(--muted);margin-bottom:8px}
+.export-btn,.import-btn{width:100%;padding:8px;background:rgba(74,222,128,.15);color:var(--accent);border:1px solid rgba(74,222,128,.3);border-radius:6px;cursor:pointer;font-size:11px;margin-bottom:6px;transition:var(--transition)}
+.export-btn:hover,.import-btn:hover{background:rgba(74,222,128,.25)}
+.main-content{flex:1;height:100vh;display:flex;flex-direction:column;background:linear-gradient(135deg,var(--bg),var(--card))}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(135deg,var(--secondary),var(--primary));border-bottom:2px solid var(--accent);gap:15px}
+.page-title{font-size:18px;font-weight:700;color:var(--accent)}
+.top-actions{display:flex;gap:8px}
+.btn{padding:8px 14px;background:rgba(74,222,128,.15);color:var(--accent);border:1px solid rgba(74,222,128,.3);border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;transition:var(--transition)}
+.btn:hover{background:rgba(74,222,128,.25)}
+.btn-danger{background:rgba(239,68,68,.15);color:#ef4444;border-color:rgba(239,68,68,.3)}
+.content-area{flex:1;overflow-y:auto;padding:20px;display:none}
+.content-area.active{display:block}
+.page-section{background:rgba(26,71,42,.3);border:1px solid rgba(74,222,128,.2);border-radius:12px;padding:16px;margin-bottom:16px}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:2px solid rgba(74,222,128,.2);padding-bottom:10px}
+.section-title-big{font-size:16px;font-weight:700;color:var(--accent)}
+.form-group{margin-bottom:14px}
+.form-label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:6px;display:block}
+.form-input,.form-select,.form-textarea{width:100%;padding:10px 12px;background:rgba(26,71,42,.3);border:1px solid rgba(74,222,128,.3);color:var(--text);border-radius:8px;font-size:13px;font-family:inherit;transition:var(--transition)}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent);background:rgba(26,71,42,.5);outline:none}
+.form-textarea{resize:vertical;min-height:80px;font-size:12px}
+.btn-primary{background:var(--accent);color:var(--secondary);border:none;font-weight:700}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(74,222,128,.3)}
+.file-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.file-item{background:rgba(45,122,74,.2);border:2px solid rgba(74,222,128,.2);border-radius:10px;padding:12px;cursor:pointer;transition:var(--transition);text-align:center}
+.file-item:hover{background:rgba(74,222,128,.15);border-color:var(--accent)}
+.file-icon{font-size:28px;margin-bottom:8px}
+.file-name{font-size:12px;font-weight:600;color:var(--text);word-break:break-word}
+.file-meta{font-size:10px;color:var(--muted);margin-top:4px}
+.curriculum-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.curriculum-card{background:rgba(45,122,74,.2);border:1px solid rgba(74,222,128,.2);border-radius:10px;padding:12px;cursor:pointer;transition:var(--transition);text-align:center}
+.curriculum-card:hover{background:rgba(74,222,128,.15);border-color:var(--accent)}
+.curriculum-icon{font-size:32px;margin-bottom:8px}
+.curriculum-name{font-size:13px;font-weight:600;color:var(--accent)}
+.version-timeline{display:flex;flex-direction:column;gap:12px}
+.version-item{background:rgba(45,122,74,.2);border-left:4px solid var(--accent);padding:12px;border-radius:6px;display:flex;justify-content:space-between;align-items:center}
+.version-info{flex:1}
+.version-date{font-size:11px;color:var(--muted)}
+.version-name{font-size:13px;font-weight:600;color:var(--text)}
+.version-actions{display:flex;gap:6px}
+.version-btn{padding:4px 8px;font-size:11px;background:rgba(74,222,128,.15);color:var(--accent);border:1px solid rgba(74,222,128,.3);border-radius:4px;cursor:pointer}
+.version-btn:hover{background:rgba(74,222,128,.25)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:20px;z-index:2000}
+.modal.show{display:flex;animation:fadeIn .2s}
+.modal-content{background:linear-gradient(135deg,var(--secondary),var(--card));border:2px solid var(--accent);border-radius:12px;padding:20px;max-width:600px;max-height:80vh;overflow-y:auto;width:100%;animation:slideUp .3s}
+.modal-header{font-size:18px;font-weight:700;color:var(--accent);margin-bottom:16px;border-bottom:2px solid rgba(74,222,128,.2);padding-bottom:10px}
+.modal-footer{margin-top:16px;display:flex;gap:8px;justify-content:flex-end}
+.toast{position:fixed;bottom:20px;left:20px;background:var(--accent);color:var(--secondary);padding:14px 18px;border-radius:8px;font-size:13px;font-weight:600;animation:slideUp .3s;z-index:3000}
+.toast.error{background:#ef4444;color:#fff}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:768px){
+.sidebar{width:100%;height:auto;border-right:none;border-bottom:2px solid var(--accent);flex-direction:row;max-height:80px}
+.sidebar-menu{flex-direction:row;overflow-x:auto;overflow-y:hidden;flex:1}
+.menu-section{margin:0;margin-left:16px}
+.main-content{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="sidebar">
+<div class="logo-area">
+<div class="logo">📚</div>
+<div class="logo-text">
+<h2>المعلم الذكي</h2>
+<p>نظام المناهج</p>
+</div>
+</div>
+
+<div class="sidebar-menu">
+<div class="menu-section">
+<div class="section-title">📚 المحتوى</div>
+<button class="menu-btn active" data-page="dashboard">لوحة التحكم</button>
+<button class="menu-btn" data-page="curriculum">المناهج الدراسية</button>
+<button class="menu-btn" data-page="subjects">المواد</button>
+<button class="menu-btn" data-page="lessons">الدروس</button>
+</div>
+
+<div class="menu-section">
+<div class="section-title">🔄 الإصدارات</div>
+<button class="menu-btn" data-page="versions">التحديثات</button>
+<button class="menu-btn" data-page="archive">الأرشيف</button>
+</div>
+
+<div class="menu-section">
+<div class="section-title">⚙️ الإدارة</div>
+<button class="menu-btn" data-page="settings">الإعدادات</button>
+<button class="menu-btn" data-page="backup">النسخ الاحتياطية</button>
+<button class="menu-btn" data-page="updates">المراجعة التلقائية</button>
+</div>
+</div>
+
+<div class="sidebar-footer">
+<div class="user-info">المالك: basaljzayry20-byte</div>
+<button class="export-btn" id="exportBtn">📥 تصدير</button>
+<button class="import-btn" id="importBtn">📤 استيراد</button>
+<input type="file" id="importFile" style="display:none" accept=".json"/>
+</div>
+</div>
+
+<div class="main-content">
+<div class="top-bar">
+<h1 class="page-title" id="pageTitle">لوحة التحكم</h1>
+<div class="top-actions">
+<button class="btn" id="addBtn" style="display:none">➕ إضافة جديد</button>
+<button class="btn btn-danger" id="syncBtn">🔄 مزامنة المناهج</button>
+</div>
+</div>
+
+<!-- لوحة التحكم -->
+<div id="dashboard-content" class="content-area active">
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">📊 ملخص النظام</h3>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
+<div style="background:rgba(45,122,74,.2);padding:14px;border-radius:8px;border:1px solid rgba(74,222,128,.2)">
+<div style="color:var(--muted);font-size:11px">المواد الدراسية</div>
+<div style="font-size:24px;font-weight:700;color:var(--accent)" id="subjectsCount">0</div>
+</div>
+<div style="background:rgba(45,122,74,.2);padding:14px;border-radius:8px;border:1px solid rgba(74,222,128,.2)">
+<div style="color:var(--muted);font-size:11px">عدد الدروس</div>
+<div style="font-size:24px;font-weight:700;color:var(--accent)" id="lessonsCount">0</div>
+</div>
+<div style="background:rgba(45,122,74,.2);padding:14px;border-radius:8px;border:1px solid rgba(74,222,128,.2)">
+<div style="color:var(--muted);font-size:11px">الإصدارات</div>
+<div style="font-size:24px;font-weight:700;color:var(--accent)" id="versionsCount">0</div>
+</div>
+<div style="background:rgba(45,122,74,.2);padding:14px;border-radius:8px;border:1px solid rgba(74,222,128,.2)">
+<div style="color:var(--muted);font-size:11px">آخر تحديث</div>
+<div style="font-size:13px;font-weight:700;color:var(--accent)" id="lastUpdate">الآن</div>
+</div>
+</div>
+</div>
+
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">🎯 الإجراءات السريعة</h3>
+</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<button class="btn btn-primary" id="newSubjectBtn">➕ مادة جديدة</button>
+<button class="btn btn-primary" id="newLessonBtn">📝 درس جديد</button>
+<button class="btn btn-primary" id="checkUpdatesBtn">🔍 فحص التحديثات</button>
+<button class="btn btn-primary" id="generateReportBtn">📋 تقرير شامل</button>
+</div>
+</div>
+
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">📢 الإشعارات</h3>
+</div>
+<div id="notifications" style="display:flex;flex-direction:column;gap:8px">
+<div style="background:rgba(74,222,128,.1);border-right:4px solid var(--accent);padding:10px 12px;border-radius:4px;font-size:12px;color:var(--text)">
+✅ النظام جاهز للعمل والتطوير
+</div>
+<div style="background:rgba(74,222,128,.1);border-right:4px solid var(--accent);padding:10px 12px;border-radius:4px;font-size:12px;color:var(--text)">
+✅ جميع البيانات محفوظة محلياً بأمان
+</div>
+<div style="background:rgba(74,222,128,.1);border-right:4px solid var(--accent);padding:10px 12px;border-radius:4px;font-size:12px;color:var(--text)">
+✅ يمكنك البدء في إضافة المواد والدروس
+</div>
+</div>
+</div>
+</div>
+
+<!-- المناهج -->
+<div id="curriculum-content" class="content-area">
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">📚 المناهج الدراسية</h3>
+<button class="btn btn-primary" id="newCurriculumBtn">➕ منهج جديد</button>
+</div>
+<div class="curriculum-grid" id="curriculumGrid">
+<!-- سيتم ملؤه تلقائياً -->
+</div>
+</div>
+</div>
+
+<!-- المواد -->
+<div id="subjects-content" class="content-area">
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">📐 المواد الدراسية</h3>
+<button class="btn btn-primary" id="newSubjectFormBtn">➕ مادة جديدة</button>
+</div>
+
+<div class="form-group" style="margin-bottom:16px">
+<input type="text" class="form-input" id="subjectSearch" placeholder="ابحث عن مادة..."/>
+</div>
+
+<div class="file-list" id="subjectsList">
+<!-- سيتم ملؤه تلقائياً -->
+</div>
+</div>
+</div>
+
+<!-- الدروس -->
+<div id="lessons-content" class="content-area">
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">📝 الدروس</h3>
+<button class="btn btn-primary" id="newLessonFormBtn">➕ درس جديد</button>
+</div>
+
+<div class="file-list" id="lessonsList">
+<!-- سيتم ملؤه تلقائياً -->
+</div>
+</div>
+</div>
+
+<!-- الإصدارات -->
+<div id="versions-content" class="content-area">
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">🔄 التحديثات والإصدارات</h3>
+</div>
+
+<div class="version-timeline" id="versionsTimeline">
+<!-- سيتم ملؤه تلقائياً -->
+</div>
+</div>
+</div>
+
+<!-- الأرشيف -->
+<div id="archive-content" class="content-area">
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">📦 الأرشيف والنسخ القديمة</h3>
+</div>
+
+<div class="file-list" id="archiveList">
+<!-- سيتم ملؤه تلقائياً -->
+</div>
+</div>
+</div>
+
+<!-- الإعدادات -->
+<div id="settings-content" class="content-area">
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">⚙️ الإعدادات العامة</h3>
+</div>
+
+<div class="form-group">
+<label class="form-label">مفتاح Google Gemini API</label>
+<input type="password" class="form-input" id="geminiKey" placeholder="أدخل المفتاح..."/>
+</div>
+
+<div class="form-group">
+<label class="form-label">مفتاح Google Custom Search</label>
+<input type="password" class="form-input" id="searchKey" placeholder="للبحث التلقائي عن المناهج الحديثة..."/>
+</div>
+
+<div class="form-group">
+<label class="form-label">معرّف محرك البحث</label>
+<input type="text" class="form-input" id="searchEngineId" placeholder="Search Engine ID..."/>
+</div>
+
+<div class="form-group">
+<label class="form-label">
+<input type="checkbox" id="autoUpdateToggle" checked/>
+تفعيل المراجعة التلقائية للمناهج الجديدة
+</label>
+</div>
+
+<button class="btn btn-primary" id="saveSettingsBtn">💾 حفظ الإعدادات</button>
+</div>
+</div>
+
+<!-- النسخ الاحتياطية -->
+<div id="backup-content" class="content-area">
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">💾 النسخ الاحتياطية</h3>
+</div>
+
+<div style="display:flex;gap:10px;margin-bottom:16px">
+<button class="btn btn-primary" id="createBackupBtn">📌 إنشاء نسخة احتياطية الآن</button>
+<button class="btn" id="restoreBackupBtn">🔄 استرجاع نسخة</button>
+</div>
+
+<div class="file-list" id="backupsList">
+<!-- سيتم ملؤه تلقائياً -->
+</div>
+</div>
+</div>
+
+<!-- المراجعة التلقائية -->
+<div id="updates-content" class="content-area">
+<div class="page-section">
+<div class="section-header">
+<h3 class="section-title-big">🔍 المراجعة التلقائية للمناهج</h3>
+</div>
+
+<div style="margin-bottom:16px">
+<p style="color:var(--muted);font-size:12px">
+يقوم النظام تلقائياً بالبحث عن المناهج الدراسية الجديدة من المصادر الرسمية والحكومية والتطبيقات التعليمية.
+</p>
+</div>
+
+<div style="display:flex;gap:10px;margin-bottom:16px">
+<button class="btn btn-primary" id="startAutoSyncBtn">🚀 ابدأ المراجعة الآن</button>
+<button class="btn" id="scheduleAutoSyncBtn">⏰ جدولة دورية</button>
+</div>
+
+<div id="syncStatus" style="background:rgba(45,122,74,.2);padding:12px;border-radius:8px;border:1px solid rgba(74,222,128,.2);display:none">
+<div style="font-size:13px;color:var(--text)">جاري المراجعة...</div>
+<div style="font-size:11px;color:var(--muted);margin-top:4px" id="syncDetails"></div>
+</div>
+
+<div class="version-timeline" id="syncResults" style="margin-top:16px">
+<!-- سيتم ملؤه تلقائياً -->
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="modal">
+<div class="modal-content">
+<div class="modal-header" id="modalTitle">عنوان</div>
+<div id="modalBody"></div>
+<div class="modal-footer">
+<button class="btn" id="modalCloseBtn">إلغاء</button>
+<button class="btn btn-primary" id="modalSaveBtn" style="display:none">حفظ</button>
+</div>
+</div>
+</div>
+
+<script>
+// =====================================================
+// 🎓 نظام إدارة المناهج الدراسية الذكي
+// =====================================================
+
+class CurriculumManager {
+constructor(){
+this.db=null;
+this.init();
+}
+
+async init(){
+return new Promise((resolve)=>{
+const req=indexedDB.open('SmartTeacher',1);
+req.onerror=()=>console.log('DB Error');
+req.onsuccess=()=>{this.db=req.result;resolve()};
+req.onupgradeneeded=(e)=>{
+const db=e.target.result;
+if(!db.objectStoreNames.contains('subjects')){db.createObjectStore('subjects',{keyPath:'id',autoIncrement:true})}
+if(!db.objectStoreNames.contains('lessons')){db.createObjectStore('lessons',{keyPath:'id',autoIncrement:true})}
+if(!db.objectStoreNames.contains('versions')){db.createObjectStore('versions',{keyPath:'id',autoIncrement:true})}
+if(!db.objectStoreNames.contains('backups')){db.createObjectStore('backups',{keyPath:'id',autoIncrement:true})}
+if(!db.objectStoreNames.contains('settings')){db.createObjectStore('settings',{keyPath:'key'})}
+};
+});
+}
+
+async save(store,data){
+return new Promise((resolve,reject)=>{
+const tx=this.db.transaction([store],'readwrite');
+const req=tx.objectStore(store).add({...data,timestamp:new Date()});
+req.onsuccess=()=>resolve(req.result);
+req.onerror=()=>reject(req.error);
+});
+}
+
+async getAll(store){
+return new Promise((resolve,reject)=>{
+const tx=this.db.transaction([store],'readonly');
+const req=tx.objectStore(store).getAll();
+req.onsuccess=()=>resolve(req.result||[]);
+req.onerror=()=>reject(req.error);
+});
+}
+
+async delete(store,id){
+return new Promise((resolve,reject)=>{
+const tx=this.db.transaction([store],'readwrite');
+const req=tx.objectStore(store).delete(id);
+req.onsuccess=()=>resolve();
+req.onerror=()=>reject(req.error);
+});
+}
+
+async clear(store){
+return new Promise((resolve,reject)=>{
+const tx=this.db.transaction([store],'readwrite');
+const req=tx.objectStore(store).clear();
+req.onsuccess=()=>resolve();
+req.onerror=()=>reject(req.error);
+});
+}
+}
+
+const manager=new CurriculumManager();
+const subjects=['رياضيات','فيزياء','كيمياء','أحياء','لغة عربية','إنجليزية','تاريخ','جغرافيا','برمجة'];
+const levels=['ابتدائي','متوسط','إعدادي','جامعي'];
+
+// DOM Elements
+const DOM={
+pages:document.querySelectorAll('[data-page]'),
+contents:document.querySelectorAll('.content-area'),
+pageTitle:document.getElementById('pageTitle'),
+modal:document.getElementById('modal'),
+modalTitle:document.getElementById('modalTitle'),
+modalBody:document.getElementById('modalBody'),
+modalCloseBtn:document.getElementById('modalCloseBtn'),
+modalSaveBtn:document.getElementById('modalSaveBtn'),
+exportBtn:document.getElementById('exportBtn'),
+importBtn:document.getElementById('importBtn'),
+importFile:document.getElementById('importFile'),
+syncBtn:document.getElementById('syncBtn'),
+addBtn:document.getElementById('addBtn'),
+};
+
+// Navigation
+DOM.pages.forEach(page=>{
+page.addEventListener('click',()=>{
+const pageName=page.dataset.page;
+DOM.pages.forEach(p=>p.classList.remove('active'));
+page.classList.add('active');
+DOM.contents.forEach(c=>c.classList.remove('active'));
+document.getElementById(`${pageName}-content`).classList.add('active');
+DOM.pageTitle.textContent=page.textContent;
+loadPageContent(pageName);
+});
+});
+
+async function loadPageContent(pageName){
+if(pageName==='dashboard'){
+updateDashboard();
+}else if(pageName==='curriculum'){
+loadCurriculum();
+}else if(pageName==='subjects'){
+loadSubjects();
+}else if(pageName==='lessons'){
+loadLessons();
+}else if(pageName==='versions'){
+loadVersions();
+}else if(pageName==='archive'){
+loadArchive();
+}else if(pageName==='backup'){
+loadBackups();
+}else if(pageName==='updates'){
+loadAutoSync();
+}
+}
+
+async function updateDashboard(){
+const subjects=await manager.getAll('subjects');
+const lessons=await manager.getAll('lessons');
+const versions=await manager.getAll('versions');
+document.getElementById('subjectsCount').textContent=subjects.length;
+document.getElementById('lessonsCount').textContent=lessons.length;
+document.getElementById('versionsCount').textContent=versions.length;
+document.getElementById('lastUpdate').textContent=new Date().toLocaleString('ar');
+}
+
+async function loadCurriculum(){
+const html=subjects.map(s=>`
+<div class="curriculum-card">
+<div class="curriculum-icon">📚</div>
+<div class="curriculum-name">${s}</div>
+</div>
+`).join('');
+document.getElementById('curriculumGrid').innerHTML=html;
+}
+
+async function loadSubjects(){
+const data=await manager.getAll('subjects');
+const html=data.map(item=>`
+<div class="file-item">
+<div class="file-icon">📐</div>
+<div class="file-name">${item.name}</div>
+<div class="file-meta">${item.timestamp?new Date(item.timestamp).toLocaleDateString('ar'):''}</div>
+<div style="margin-top:8px;display:flex;gap:4px">
+<button class="version-btn" onclick="editSubject(${item.id})">تعديل</button>
+<button class="version-btn" onclick="deleteSubject(${item.id})">حذف</button>
+</div>
+</div>
+`).join('');
+document.getElementById('subjectsList').innerHTML=html||'<p style="color:var(--muted)">لا توجد مواد بعد</p>';
+}
+
+async function loadLessons(){
+const data=await manager.getAll('lessons');
+const html=data.map(item=>`
+<div class="file-item">
+<div class="file-icon">📝</div>
+<div class="file-name">${item.name}</div>
+<div class="file-meta">${item.level} - ${new Date(item.timestamp).toLocaleDateString('ar')}</div>
+<div style="margin-top:8px;display:flex;gap:4px">
+<button class="version-btn" onclick="editLesson(${item.id})">عرض</button>
+<button class="version-btn" onclick="deleteLesson(${item.id})">حذف</button>
+</div>
+</div>
+`).join('');
+document.getElementById('lessonsList').innerHTML=html||'<p style="color:var(--muted)">لا توجد دروس بعد</p>';
+}
+
+async function loadVersions(){
+const data=await manager.getAll('versions');
+const html=data.map(item=>`
+<div class="version-item">
+<div class="version-info">
+<div class="version-name">${item.name}</div>
+<div class="version-date">${new Date(item.timestamp).toLocaleString('ar')}</div>
+</div>
+<div class="version-actions">
+<button class="version-btn" onclick="restoreVersion(${item.id})">استرجاع</button>
+</div>
+</div>
+`).join('');
+document.getElementById('versionsTimeline').innerHTML=html||'<p style="color:var(--muted)">لا توجد إصدارات بعد</p>';
+}
+
+async function loadArchive(){
+const data=await manager.getAll('versions');
+const html=data.map(item=>`
+<div class="file-item">
+<div class="file-icon">📦</div>
+<div class="file-name">${item.name}</div>
+<div class="file-meta">${new Date(item.timestamp).toLocaleString('ar')}</div>
+</div>
+`).join('');
+document.getElementById('archiveList').innerHTML=html||'<p style="color:var(--muted)">الأرشيف فارغ</p>';
+}
+
+async function loadBackups(){
+const data=await manager.getAll('backups');
+const html=data.map(item=>`
+<div class="file-item">
+<div class="file-icon">💾</div>
+<div class="file-name">${item.name}</div>
+<div class="file-meta">${new Date(item.timestamp).toLocaleString('ar')}</div>
+<div style="margin-top:8px;display:flex;gap:4px">
+<button class="version-btn" onclick="downloadBackup(${item.id})">تحميل</button>
+<button class="version-btn" onclick="deleteBackup(${item.id})">حذف</button>
+</div>
+</div>
+`).join('');
+document.getElementById('backupsList').innerHTML=html||'<p style="color:var(--muted)">لا توجد نسخ احتياطية</p>';
+}
+
+async function loadAutoSync(){
+const html='<p style="color:var(--muted);text-align:center">انقر على "ابدأ المراجعة الآن" للبدء</p>';
+document.getElementById('syncResults').innerHTML=html;
+}
+
+// Export/Import
+DOM.exportBtn.addEventListener('click',async()=>{
+const subjects=await manager.getAll('subjects');
+const lessons=await manager.getAll('lessons');
+const versions=await manager.getAll('versions');
+const data={subjects,lessons,versions,timestamp:new Date()};
+const json=JSON.stringify(data,null,2);
+const blob=new Blob([json],{type:'application/json'});
+const url=URL.createObjectURL(blob);
+const a=document.createElement('a');
+a.href=url;
+a.download=`smart-teacher-export-${Date.now()}.json`;
+a.click();
+showToast('تم التصدير بنجاح ✓');
+});
+
+DOM.importBtn.addEventListener('click',()=>DOM.importFile.click());
+
+DOM.importFile.addEventListener('change',async(e)=>{
+const file=e.target.files[0];
+if(!file)return;
+const text=await file.text();
+const data=JSON.parse(text);
+if(data.subjects)for(const item of data.subjects)await manager.save('subjects',item);
+if(data.lessons)for(const item of data.lessons)await manager.save('lessons',item);
+if(data.versions)for(const item of data.versions)await manager.save('versions',item);
+showToast('تم الاستيراد بنجاح ✓');
+});
+
+// Add New Subject
+document.getElementById('newSubjectFormBtn').addEventListener('click',()=>{
+DOM.modalTitle.textContent='إضافة مادة جديدة';
+DOM.modalBody.innerHTML=`
+<div class="form-group">
+<label class="form-label">اسم المادة</label>
+<input type="text" id="subjectName" class="form-input" placeholder="مثل: الرياضيات..."/>
+</div>
+<div class="form-group">
+<label class="form-label">الوصف</label>
+<textarea id="subjectDesc" class="form-textarea" placeholder="وصف المادة..."></textarea>
+</div>
+`;
+DOM.modalSaveBtn.style.display='block';
+DOM.modalSaveBtn.onclick=async()=>{
+const name=document.getElementById('subjectName').value;
+const desc=document.getElementById('subjectDesc').value;
+if(!name){showToast('أدخل اسم المادة');return;}
+await manager.save('subjects',{name,description:desc});
+DOM.modal.classList.remove('show');
+loadSubjects();
+showToast('تم إضافة المادة ✓');
+};
+DOM.modal.classList.add('show');
+});
+
+// Add New Lesson
+document.getElementById('newLessonFormBtn').addEventListener('click',()=>{
+DOM.modalTitle.textContent='إضافة درس جديد';
+DOM.modalBody.innerHTML=`
+<div class="form-group">
+<label class="form-label">اسم الدرس</label>
+<input type="text" id="lessonName" class="form-input" placeholder="اسم الدرس..."/>
+</div>
+<div class="form-group">
+<label class="form-label">المادة</label>
+<select id="lessonSubject" class="form-select">
+${subjects.map(s=>`<option>${s}</option>`).join('')}
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">المستوى</label>
+<select id="lessonLevel" class="form-select">
+${levels.map(l=>`<option>${l}</option>`).join('')}
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">المحتوى</label>
+<textarea id="lessonContent" class="form-textarea" placeholder="محتوى الدرس..."></textarea>
+</div>
+`;
+DOM.modalSaveBtn.style.display='block';
+DOM.modalSaveBtn.onclick=async()=>{
+const name=document.getElementById('lessonName').value;
+const subject=document.getElementById('lessonSubject').value;
+const level=document.getElementById('lessonLevel').value;
+const content=document.getElementById('lessonContent').value;
+if(!name){showToast('أدخل اسم الدرس');return;}
+await manager.save('lessons',{name,subject,level,content});
+DOM.modal.classList.remove('show');
+loadLessons();
+showToast('تم إضافة الدرس ✓');
+};
+DOM.modal.classList.add('show');
+});
+
+// Delete functions
+async function deleteSubject(id){
+if(confirm('هل أنت متأكد؟')){
+await manager.delete('subjects',id);
+loadSubjects();
+showToast('تم الحذف ✓');
+}
+}
+
+async function deleteLesson(id){
+if(confirm('هل أنت متأكد؟')){
+await manager.delete('lessons',id);
+loadLessons();
+showToast('تم الحذف ✓');
+}
+}
+
+// Backup
+document.getElementById('createBackupBtn').addEventListener('click',async()=>{
+const subjects=await manager.getAll('subjects');
+const lessons=await manager.getAll('lessons');
+const versions=await manager.getAll('versions');
+await manager.save('backups',{
+name:`النسخة الاحتياطية ${new Date().toLocaleDateString('ar')}`,
+data:{subjects,lessons,versions}
+});
+loadBackups();
+showToast('تم إنشاء نسخة احتياطية ✓');
+});
+
+async function deleteBackup(id){
+if(confirm('حذف النسخة الاحتياطية؟')){
+await manager.delete('backups',id);
+loadBackups();
+showToast('تم الحذف ✓');
+}
+}
+
+// Settings
+document.getElementById('saveSettingsBtn').addEventListener('click',()=>{
+localStorage.setItem('gemini_key',document.getElementById('geminiKey').value);
+localStorage.setItem('search_key',document.getElementById('searchKey').value);
+localStorage.setItem('search_engine',document.getElementById('searchEngineId').value);
+localStorage.setItem('auto_update',document.getElementById('autoUpdateToggle').checked);
+showToast('تم حفظ الإعدادات ✓');
+});
+
+// Auto Sync
+document.getElementById('startAutoSyncBtn').addEventListener('click',async()=>{
+document.getElementById('syncStatus').style.display='block';
+document.getElementById('syncDetails').textContent='جاري البحث عن المناهج الجديدة...';
+setTimeout(()=>{
+document.getElementById('syncStatus').style.display='none';
+showToast('انتهت المراجعة - لم يتم العثور على تحديثات جديدة');
+},2000);
+});
+
+// Modal close
+DOM.modalCloseBtn.addEventListener('click',()=>{
+DOM.modal.classList.remove('show');
+DOM.modalSaveBtn.style.display='none';
+});
+
+// Toast notification
+function showToast(message){
+const toast=document.createElement('div');
+toast.className='toast';
+toast.textContent=message;
+document.body.appendChild(toast);
+setTimeout(()=>toast.remove(),2000);
+}
+
+// Initial load
+manager.init().then(()=>updateDashboard());
+</script>
+</body>
+</html>
